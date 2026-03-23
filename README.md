@@ -3,8 +3,7 @@
 **Estudiantes:**
 - Jeremy Santiago
 - Diomar Arianny Fleming Díaz
-- Adonis Mercedes Buret (2021-2396)
-
+- Adonis Mercedes Buret
 ---
 
 ## 1. Descripción General
