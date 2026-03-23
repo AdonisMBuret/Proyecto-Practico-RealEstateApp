@@ -1,0 +1,207 @@
+@model List<RealEstateApp.Application.ViewModels.Ofertas.OfertaViewModel>
+@{
+    ViewData["Title"] = "Mis Ofertas";
+    var estadoFiltro = ViewBag.EstadoFiltro as string;
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-4">
+                <i class="bi bi-cash-stack"></i> Mis Ofertas
+            </h1>
+            <p class="lead">Historial completo de todas tus ofertas realizadas</p>
+        </div>
+    </div>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="btn-group" role="group">
+                <a asp-action="MisOfertas" class="btn @(string.IsNullOrEmpty(estadoFiltro) ? "btn-primary" : "btn-outline-primary")">
+                    <i class="bi bi-list-ul"></i> Todas
+                </a>
+                <a asp-action="MisOfertas" asp-route-estado="Pendiente" class="btn @(estadoFiltro == "Pendiente" ? "btn-warning" : "btn-outline-warning")">
+                    <i class="bi bi-clock"></i> Pendientes
+                </a>
+                <a asp-action="MisOfertas" asp-route-estado="Aceptada" class="btn @(estadoFiltro == "Aceptada" ? "btn-success" : "btn-outline-success")">
+                    <i class="bi bi-check-circle"></i> Aceptadas
+                </a>
+                <a asp-action="MisOfertas" asp-route-estado="Rechazada" class="btn @(estadoFiltro == "Rechazada" ? "btn-danger" : "btn-outline-danger")">
+                    <i class="bi bi-x-circle"></i> Rechazadas
+                </a>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title text-muted">Total Ofertas</h5>
+                    <h2 class="display-6">@Model.Count</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-warning">
+                <div class="card-body">
+                    <h5 class="card-title text-warning">Pendientes</h5>
+                    <h2 class="display-6">@Model.Count(o => o.EstadoTexto == "Pendiente")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-success">
+                <div class="card-body">
+                    <h5 class="card-title text-success">Aceptadas</h5>
+                    <h2 class="display-6">@Model.Count(o => o.EstadoTexto == "Aceptada")</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-danger">
+                <div class="card-body">
+                    <h5 class="card-title text-danger">Rechazadas</h5>
+                    <h2 class="display-6">@Model.Count(o => o.EstadoTexto == "Rechazada")</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Propiedad</th>
+                                <th>Fecha</th>
+                                <th>Monto Ofertado</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var oferta in Model)
+                            {
+                                <tr class="@(oferta.EstadoTexto == "Aceptada" ? "table-success" : oferta.EstadoTexto == "Rechazada" ? "table-danger" : "")">
+                                    <td>
+                                        <strong>@oferta.CodigoPropiedad</strong>
+                                        <br />
+                                        <small class="text-muted">ID: @oferta.PropiedadId</small>
+                                    </td>
+                                    <td>
+                                        <small>@oferta.FechaCreacion.ToString("dd/MM/yyyy")</small>
+                                        <br />
+                                        <small class="text-muted">@oferta.FechaCreacion.ToString("HH:mm")</small>
+                                    </td>
+                                    <td>
+                                        <strong class="text-primary">
+                                            @oferta.MontoOferta.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                                        </strong>
+                                        @if (!string.IsNullOrEmpty(oferta.Comentarios))
+                                        {
+                                            <br />
+                                            <small class="text-muted">
+                                                <i class="bi bi-chat-quote"></i> @oferta.Comentarios
+                                            </small>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (oferta.EstadoTexto == "Pendiente")
+                                        {
+                                            <span class="badge bg-warning">
+                                                <i class="bi bi-clock"></i> Pendiente
+                                            </span>
+                                        }
+                                        else if (oferta.EstadoTexto == "Aceptada")
+                                        {
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-check-circle"></i> Aceptada
+                                            </span>
+                                            <br />
+                                            <small class="text-success">¡Felicitaciones!</small>
+                                        }
+                                        else if (oferta.EstadoTexto == "Rechazada")
+                                        {
+                                            <span class="badge bg-danger">
+                                                <i class="bi bi-x-circle"></i> Rechazada
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <a asp-controller="Home" asp-action="Details" asp-route-id="@oferta.PropiedadId" 
+                                           class="btn btn-sm btn-outline-primary" title="Ver Propiedad">
+                                            <i class="bi bi-eye"></i> Ver
+                                        </a>
+                                        
+                                        @if (oferta.EstadoTexto == "Aceptada")
+                                        {
+                                            <a asp-controller="Cliente" asp-action="PropiedadesAdquiridas" 
+                                               class="btn btn-sm btn-success" title="Ir a Mis Propiedades">
+                                                <i class="bi bi-house-check"></i>
+                                            </a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle"></i>
+            <p class="mb-0">
+                @if (!string.IsNullOrEmpty(estadoFiltro))
+                {
+                    <span>No tienes ofertas con estado "@estadoFiltro".</span>
+                }
+                else
+                {
+                    <span>Aún no has realizado ninguna oferta.</span>
+                }
+            </p>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">
+                <i class="bi bi-search"></i> Explorar Propiedades
+            </a>
+        </div>
+    }
+
+    
+    <div class="row mt-4">
+        <div class="col-12 d-flex justify-content-between">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver a Inicio
+            </a>
+            <a asp-controller="Cliente" asp-action="PropiedadesAdquiridas" class="btn btn-success">
+                <i class="bi bi-house-check"></i> Ver Propiedades Adquiridas
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+        
+        .btn-group .btn {
+            margin-right: 5px;
+        }
+        
+        .badge {
+            font-size: 0.9rem;
+            padding: 0.5rem 0.75rem;
+        }
+    </style>
+}

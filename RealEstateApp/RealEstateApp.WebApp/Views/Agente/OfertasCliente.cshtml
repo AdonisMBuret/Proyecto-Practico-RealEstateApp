@@ -1,0 +1,384 @@
+@model List<RealEstateApp.Application.ViewModels.Ofertas.OfertaViewModel>
+@{
+    ViewData["Title"] = "Ofertas del Cliente";
+    var propiedadId = ViewBag.PropiedadId as int?;
+    var clienteId = ViewBag.ClienteId as string;
+    var clienteNombre = ViewBag.ClienteNombre as string;
+}
+
+<div class="container">
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index">
+                    <i class="bi bi-house-door"></i> Home del Agente
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Ofertas" asp-route-propiedadId="@propiedadId">Ofertas</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@clienteNombre</li>
+        </ol>
+    </nav>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-5">
+                        <i class="bi bi-person-check text-success"></i> 
+                        Ofertas de @clienteNombre
+                    </h1>
+                    <p class="lead text-muted">
+                        Historial completo de ofertas realizadas
+                        <span class="badge bg-secondary ms-2">@Model.Count oferta(s)</span>
+                    </p>
+                </div>
+                <div>
+                    <a asp-action="Ofertas" asp-route-propiedadId="@propiedadId" 
+                       class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left"></i> Volver a Ofertas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <h4 class="text-primary">@Model.Count</h4>
+                                <small class="text-muted">Total Ofertas</small>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-success">
+                                    @Model.Max(o => o.MontoOferta).ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                                </h4>
+                                <small class="text-muted">Oferta Más Alta</small>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-info">
+                                    @Model.Min(o => o.MontoOferta).ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                                </h4>
+                                <small class="text-muted">Oferta Más Baja</small>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-warning">@Model.Count(o => o.EstadoTexto == "Pendiente")</h4>
+                                <small class="text-muted">Pendientes</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-clock-history"></i> 
+                            Historial de Ofertas - Ordenado por Fecha
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th><i class="bi bi-calendar"></i> Fecha y Hora</th>
+                                        <th><i class="bi bi-currency-dollar"></i> Monto Ofertado</th>
+                                        <th><i class="bi bi-info-circle"></i> Estado</th>
+                                        <th><i class="bi bi-chat-quote"></i> Comentarios</th>
+                                        <th><i class="bi bi-gear"></i> Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var oferta in Model)
+                                    {
+                                        <tr class="@(oferta.EstadoTexto == "Pendiente" ? "table-warning" : "")">
+                                            
+                                            <td>
+                                                <div class="fw-bold">@oferta.FechaCreacion.ToString("dd/MM/yyyy")</div>
+                                                <small class="text-muted">@oferta.FechaCreacion.ToString("HH:mm")</small>
+                                            </td>
+
+                                            
+                                            <td>
+                                                <div class="fw-bold text-success fs-5">
+                                                    @oferta.MontoOferta.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                                                </div>
+                                            </td>
+
+                                            
+                                            <td>
+                                                @switch (oferta.EstadoTexto)
+                                                {
+                                                    case "Pendiente":
+                                                        <span class="badge bg-warning text-dark fs-6">
+                                                            <i class="bi bi-clock"></i> Pendiente
+                                                        </span>
+                                                        break;
+                                                    case "Aceptada":
+                                                        <span class="badge bg-success fs-6">
+                                                            <i class="bi bi-check-circle"></i> Aceptada
+                                                        </span>
+                                                        break;
+                                                    case "Rechazada":
+                                                        <span class="badge bg-danger fs-6">
+                                                            <i class="bi bi-x-circle"></i> Rechazada
+                                                        </span>
+                                                        break;
+                                                }
+                                            </td>
+
+                                            
+                                            <td>
+                                                @if (!string.IsNullOrEmpty(oferta.Comentarios))
+                                                {
+                                                    <span class="text-truncate d-inline-block" style="max-width: 200px;" 
+                                                          title="@oferta.Comentarios">
+                                                        "@oferta.Comentarios"
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">Sin comentarios</span>
+                                                }
+                                            </td>
+
+                                            
+                                            <td>
+                                                @if (oferta.EstadoTexto == "Pendiente")
+                                                {
+                                                    <div class="btn-group btn-group-sm" role="group">
+                                                        
+                                                        <button type="button" 
+                                                                class="btn btn-success btn-aceptar" 
+                                                                data-oferta-id="@oferta.Id"
+                                                                data-monto="@oferta.MontoOferta.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))"
+                                                                title="Aceptar Oferta">
+                                                            <i class="bi bi-check-lg"></i>
+                                                        </button>
+                                                        
+                                                        
+                                                        <button type="button" 
+                                                                class="btn btn-danger btn-rechazar" 
+                                                                data-oferta-id="@oferta.Id"
+                                                                data-monto="@oferta.MontoOferta.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))"
+                                                                title="Rechazar Oferta">
+                                                            <i class="bi bi-x-lg"></i>
+                                                        </button>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">
+                                                        <i class="bi bi-check"></i> Procesada
+                                                    </span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    <h6 class="alert-heading">
+                        <i class="bi bi-info-circle"></i> Importante sobre las Ofertas
+                    </h6>
+                    <ul class="mb-0">
+                        <li><strong>Al aceptar una oferta:</strong> La propiedad se marca automáticamente como "Vendida"</li>
+                        <li><strong>Otras ofertas pendientes:</strong> Se rechazan automáticamente cuando aceptas una</li>
+                        <li><strong>No se podrán:</strong> Recibir más ofertas una vez que aceptes una</li>
+                        <li><strong>Acción irreversible:</strong> No se puede deshacer una vez confirmada</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-currency-dollar display-1 text-muted mb-4"></i>
+                        <h3 class="text-muted">No hay ofertas de este cliente</h3>
+                        <p class="lead text-muted mb-4">
+                            El cliente aún no ha realizado ofertas para esta propiedad.
+                        </p>
+                        <a asp-action="Ofertas" asp-route-propiedadId="@propiedadId" 
+                           class="btn btn-primary btn-lg">
+                            <i class="bi bi-arrow-left"></i> Volver a Ofertas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+<div class="modal fade" id="modalAceptarOferta" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-check-circle"></i> Confirmar Aceptación de Oferta
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <strong>¡Acción Importante!</strong> Esta decisión no se puede deshacer.
+                </div>
+                
+                <p>¿Está seguro que desea <strong>ACEPTAR</strong> la oferta de:</p>
+                <div class="text-center p-3 bg-light rounded">
+                    <h4 class="text-success" id="monto-aceptar"></h4>
+                    <p class="mb-0">del cliente <strong>@clienteNombre</strong></p>
+                </div>
+                
+                <div class="mt-3">
+                    <h6>Al aceptar esta oferta:</h6>
+                    <ul class="small">
+                        <li>La propiedad se marcará como <strong>"Vendida"</strong></li>
+                        <li>Todas las demás ofertas pendientes se <strong>rechazarán automáticamente</strong></li>
+                        <li>No se podrán recibir más ofertas para esta propiedad</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="post" class="d-inline" id="form-aceptar">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-check-lg"></i> Sí, Aceptar Oferta
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modalRechazarOferta" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-x-circle"></i> Rechazar Oferta
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea <strong>RECHAZAR</strong> la oferta de:</p>
+                <div class="text-center p-3 bg-light rounded">
+                    <h4 class="text-danger" id="monto-rechazar"></h4>
+                    <p class="mb-0">del cliente <strong>@clienteNombre</strong></p>
+                </div>
+                
+                <div class="mt-3">
+                    <label for="comentarios-rechazo" class="form-label">
+                        Comentarios para el cliente <span class="text-muted">(Opcional)</span>
+                    </label>
+                    <textarea class="form-control" id="comentarios-rechazo" rows="3" 
+                              placeholder="Explique brevemente el motivo del rechazo..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="post" class="d-inline" id="form-rechazar">
+                    <input type="hidden" name="comentarios" id="hidden-comentarios">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-x-lg"></i> Rechazar Oferta
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .table-warning {
+            background-color: rgba(255, 193, 7, 0.1) !important;
+        }
+        
+        .btn-aceptar:hover {
+            transform: scale(1.1);
+        }
+        
+        .btn-rechazar:hover {
+            transform: scale(1.1);
+        }
+        
+        .table td {
+            vertical-align: middle;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            let ofertaSeleccionada = null;
+
+            // Aceptar oferta
+            $('.btn-aceptar').on('click', function() {
+                ofertaSeleccionada = $(this).data('oferta-id');
+                const monto = $(this).data('monto');
+                
+                $('#monto-aceptar').text(monto);
+                $('#form-aceptar').attr('action', `@Url.Action("AceptarOferta")?ofertaId=${ofertaSeleccionada}&propiedadId=@propiedadId&clienteId=@clienteId`);
+                
+                $('#modalAceptarOferta').modal('show');
+            });
+
+            // Rechazar oferta
+            $('.btn-rechazar').on('click', function() {
+                ofertaSeleccionada = $(this).data('oferta-id');
+                const monto = $(this).data('monto');
+                
+                $('#monto-rechazar').text(monto);
+                $('#form-rechazar').attr('action', `@Url.Action("RechazarOferta")?ofertaId=${ofertaSeleccionada}&propiedadId=@propiedadId&clienteId=@clienteId`);
+                $('#comentarios-rechazo').val('');
+                
+                $('#modalRechazarOferta').modal('show');
+            });
+
+            // Actualizar comentarios en formulario de rechazo
+            $('#form-rechazar').on('submit', function() {
+                const comentarios = $('#comentarios-rechazo').val();
+                $('#hidden-comentarios').val(comentarios);
+            });
+
+            // Efecto de parpadeo en ofertas pendientes
+            setInterval(function() {
+                $('.table-warning').fadeOut(200).fadeIn(200);
+            }, 3000);
+
+            // Tooltip para comentarios largos
+            $('[title]').tooltip();
+        });
+    </script>
+
+    @Html.AntiForgeryToken()
+}

@@ -1,0 +1,287 @@
+@model List<RealEstateApp.Application.ViewModels.Notificaciones.NotificacionViewModel>
+@{
+    ViewData["Title"] = "Notificaciones";
+    var resumen = ViewBag.ResumenNotificaciones as RealEstateApp.Application.ViewModels.Notificaciones.NotificacionesResumenViewModel;
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-4">
+                <i class="bi bi-bell-fill"></i> Centro de Notificaciones
+            </h1>
+            <p class="lead">Gestiona todas tus notificaciones en un solo lugar</p>
+        </div>
+    </div>
+
+    
+    @if (resumen != null)
+    {
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="icon-box mx-auto mb-3" style="background: linear-gradient(135deg, #4285F4 0%, #3367D6 100%);">
+                            <i class="bi bi-chat-dots-fill"></i>
+                        </div>
+                        <h3 class="display-6 mb-2">@resumen.MensajesNuevos</h3>
+                        <p class="text-muted mb-0">Mensajes Nuevos</p>
+                        <a asp-action="Conversaciones" class="btn btn-sm btn-outline-primary mt-2">
+                            <i class="bi bi-eye"></i> Ver Mensajes
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="icon-box mx-auto mb-3" style="background: linear-gradient(135deg, #FBBC04 0%, #F9AB00 100%);">
+                            <i class="bi bi-cash-stack"></i>
+                        </div>
+                        <h3 class="display-6 mb-2">@resumen.OfertasNuevas</h3>
+                        <p class="text-muted mb-0">Ofertas Pendientes</p>
+                        <a asp-action="Ofertas" class="btn btn-sm btn-outline-warning mt-2">
+                            <i class="bi bi-eye"></i> Ver Ofertas
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="icon-box mx-auto mb-3" style="background: linear-gradient(135deg, #EA4335 0%, #D33B2C 100%);">
+                            <i class="bi bi-bell-fill"></i>
+                        </div>
+                        <h3 class="display-6 mb-2">@resumen.TotalNoLeidas</h3>
+                        <p class="text-muted mb-0">Total No Leídas</p>
+                        @if (resumen.TotalNoLeidas > 0)
+                        {
+                            <button class="btn btn-sm btn-outline-danger mt-2" onclick="marcarTodasComoLeidas()">
+                                <i class="bi bi-check-all"></i> Marcar todas leídas
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-outline-primary active" data-filter="all">
+                    <i class="bi bi-list"></i> Todas
+                </button>
+                <button type="button" class="btn btn-outline-info" data-filter="Mensaje">
+                    <i class="bi bi-chat-dots"></i> Mensajes
+                </button>
+                <button type="button" class="btn btn-outline-warning" data-filter="Oferta">
+                    <i class="bi bi-cash-stack"></i> Ofertas
+                </button>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row">
+        <div class="col-12">
+            @if (Model != null && Model.Any())
+            {
+                <div id="notificacionesList">
+                    @foreach (var notif in Model)
+                    {
+                        <div class="card mb-3 notification-card @notif.ClaseCss" data-tipo="@notif.Tipo">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-auto">
+                                        <div class="notification-icon-large @GetNotificationIconClass(notif.Tipo)">
+                                            <i class="@notif.Icono"></i>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h5 class="mb-1">
+                                                    @notif.Titulo
+                                                    @if (!notif.EsLeida)
+                                                    {
+                                                        <span class="badge bg-primary ms-2">Nueva</span>
+                                                    }
+                                                </h5>
+                                                <p class="text-muted mb-1">@notif.Descripcion</p>
+                                                <small class="text-muted">
+                                                    <i class="bi bi-clock"></i> @notif.TiempoTranscurrido
+                                                </small>
+                                            </div>
+                                            <div>
+                                                <span class="badge @GetBadgeClass(notif.Tipo)">@notif.Tipo</span>
+                                            </div>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(notif.Url))
+                                        {
+                                            <a href="@notif.Url" class="btn btn-sm btn-primary">
+                                                <i class="bi bi-arrow-right"></i> Ver Detalles
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="card text-center py-5">
+                    <div class="card-body">
+                        <i class="bi bi-bell-slash display-1 text-muted"></i>
+                        <h4 class="mt-3">No tienes notificaciones</h4>
+                        <p class="text-muted">Cuando recibas mensajes u ofertas, aparecerán aquí</p>
+                        <a asp-action="Index" class="btn btn-primary mt-3">
+                            <i class="bi bi-speedometer2"></i> Ir al Dashboard
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .notification-icon-large {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .notification-icon-large.icon-mensaje {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .notification-icon-large.icon-oferta {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+
+        .notification-icon-large.icon-sistema {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .notification-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #dee2e6;
+        }
+
+        .notification-card.notification-mensaje {
+            border-left-color: #1976d2;
+        }
+
+        .notification-card.notification-oferta {
+            border-left-color: #f57c00;
+        }
+
+        .notification-card.notification-sistema {
+            border-left-color: #7b1fa2;
+        }
+
+        .notification-card:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            transform: translateX(5px);
+        }
+
+        .btn-group .btn {
+            margin: 0 2px;
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            font-size: 2rem;
+        }
+
+        /* Animación de entrada */
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    <script>
+        // Filtrar notificaciones
+        document.querySelectorAll('[data-filter]').forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = this.dataset.filter;
+                
+                // Actualizar botones activos
+                document.querySelectorAll('[data-filter]').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Filtrar tarjetas
+                document.querySelectorAll('.notification-card').forEach(card => {
+                    if (filter === 'all' || card.dataset.tipo === filter) {
+                        card.style.display = 'block';
+                        card.style.animation = 'fadeIn 0.3s ease';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Marcar todas como leídas
+        function marcarTodasComoLeidas() {
+            if (confirm('¿Marcar todas las notificaciones como leídas?')) {
+                fetch('/Agente/MarcarTodasNotificacionesLeidas', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        location.reload();
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+}
+
+@functions {
+    string GetNotificationIconClass(string tipo)
+    {
+        return tipo switch
+        {
+            "Mensaje" => "icon-mensaje",
+            "Oferta" => "icon-oferta",
+            _ => "icon-sistema"
+        };
+    }
+
+    string GetBadgeClass(string tipo)
+    {
+        return tipo switch
+        {
+            "Mensaje" => "bg-info",
+            "Oferta" => "bg-warning text-dark",
+            _ => "bg-secondary"
+        };
+    }
+}

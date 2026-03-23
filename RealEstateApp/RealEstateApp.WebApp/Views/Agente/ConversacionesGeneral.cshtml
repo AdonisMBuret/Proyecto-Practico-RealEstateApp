@@ -1,0 +1,226 @@
+@model List<RealEstateApp.Application.ViewModels.Chat.ConversacionConPropiedadViewModel>
+@{
+    ViewData["Title"] = "Todas mis Conversaciones";
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index">
+                    <i class="bi bi-house-door"></i> Home del Agente
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Conversaciones</li>
+        </ol>
+    </nav>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-5">
+                        <i class="bi bi-chat-dots text-primary"></i> 
+                        Todas mis Conversaciones
+                    </h1>
+                    <p class="lead text-muted">
+                        Todos los mensajes de clientes interesados en tus propiedades
+                        <span class="badge bg-primary ms-2">@Model.Count conversación(es)</span>
+                    </p>
+                </div>
+                <div>
+                    <a asp-action="Index" class="btn btn-outline-primary">
+                        <i class="bi bi-arrow-left"></i> Volver al Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-center bg-primary text-white">
+                    <div class="card-body">
+                        <i class="bi bi-people-fill display-4"></i>
+                        <h4 class="mt-2">@Model.Count</h4>
+                        <p class="mb-0">Conversaciones Activas</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center bg-success text-white">
+                    <div class="card-body">
+                        <i class="bi bi-chat-fill display-4"></i>
+                        <h4 class="mt-2">@(Model.Sum(c => c.Conversacion.TotalMensajes))</h4>
+                        <p class="mb-0">Total Mensajes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-center bg-warning text-white">
+                    <div class="card-body">
+                        <i class="bi bi-envelope-fill display-4"></i>
+                        <h4 class="mt-2">@(Model.Count(c => c.Conversacion.TieneNuevosMensajes))</h4>
+                        <p class="mb-0">Mensajes Nuevos</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            @foreach (var item in Model.OrderByDescending(c => c.Conversacion.UltimoMensajeFecha))
+            {
+                <div class="col-lg-6 mb-4">
+                    <div class="card h-100 shadow-sm hover-shadow @(item.Conversacion.TieneNuevosMensajes ? "border-primary" : "")">
+                        <div class="card-header @(item.Conversacion.TieneNuevosMensajes ? "bg-primary text-white" : "bg-light")">
+                            <div class="row align-items-center">
+                                <div class="col-8">
+                                    <h5 class="mb-0">
+                                        <i class="bi bi-person-circle"></i>
+                                        @item.Conversacion.ClienteNombre
+                                    </h5>
+                                    <small>
+                                        <i class="bi bi-house-door"></i>
+                                        Propiedad: @item.PropiedadCodigo
+                                    </small>
+                                </div>
+                                <div class="col-4 text-end">
+                                    @if (item.Conversacion.TieneNuevosMensajes)
+                                    {
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-exclamation-circle"></i> NUEVO
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">
+                                            <i class="bi bi-check-all"></i> LEÍDO
+                                        </span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <small class="text-muted">Propiedad:</small>
+                                <p class="mb-2">
+                                    <strong>@item.PropiedadCodigo</strong> - 
+                                    @(item.PropiedadDescripcion.Length > 60 ? item.PropiedadDescripcion.Substring(0, 60) + "..." : item.PropiedadDescripcion)
+                                </p>
+                            </div>
+
+                            <div class="mb-3">
+                                <small class="text-muted">Último mensaje:</small>
+                                <p class="mb-2 bg-light p-2 rounded">
+                                    <i class="bi bi-quote"></i>
+                                    "@(item.Conversacion.UltimoMensaje.Length > 100 ? item.Conversacion.UltimoMensaje.Substring(0, 100) + "..." : item.Conversacion.UltimoMensaje)"
+                                </p>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted">Total Mensajes</small>
+                                    <div class="fw-bold fs-6">
+                                        <span class="badge bg-info">@item.Conversacion.TotalMensajes</span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted">No Leídos</small>
+                                    <div class="fw-bold fs-6">
+                                        @if (item.Conversacion.MensajesNoLeidos > 0)
+                                        {
+                                            <span class="badge bg-danger">@item.Conversacion.MensajesNoLeidos</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">0</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-clock"></i>
+                                    Última actividad: 
+                                    @if (item.Conversacion.UltimoMensajeFecha.Date == DateTime.Today)
+                                    {
+                                        <span class="fw-bold text-success">
+                                            Hoy a las @item.Conversacion.UltimoMensajeFecha.ToString("HH:mm")
+                                        </span>
+                                    }
+                                    else if (item.Conversacion.UltimoMensajeFecha.Date == DateTime.Today.AddDays(-1))
+                                    {
+                                        <span class="fw-bold text-warning">
+                                            Ayer a las @item.Conversacion.UltimoMensajeFecha.ToString("HH:mm")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            @item.Conversacion.UltimoMensajeFecha.ToString("dd/MM/yyyy HH:mm")
+                                        </span>
+                                    }
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="d-grid">
+                                <a asp-action="Chat" 
+                                   asp-route-propiedadId="@item.Conversacion.PropiedadId" 
+                                   asp-route-clienteId="@item.Conversacion.ClienteId"
+                                   class="btn @(item.Conversacion.TieneNuevosMensajes ? "btn-primary" : "btn-outline-primary")">
+                                    <i class="bi bi-chat-left-text"></i> 
+                                    Abrir Chat
+                                    @if (item.Conversacion.MensajesNoLeidos > 0)
+                                    {
+                                        <span class="badge bg-danger ms-2">@item.Conversacion.MensajesNoLeidos</span>
+                                    }
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-chat-dots display-1 text-muted mb-4"></i>
+                        <h3 class="text-muted">No tienes conversaciones</h3>
+                        <p class="lead text-muted mb-4">
+                            Los clientes aún no han enviado mensajes sobre tus propiedades.
+                        </p>
+                        <a asp-action="Index" class="btn btn-primary btn-lg">
+                            <i class="bi bi-house-door"></i> Ver Mis Propiedades
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <style>
+        .hover-shadow {
+            transition: all 0.3s ease;
+        }
+        .hover-shadow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+        
+        .card.border-primary {
+            box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25);
+        }
+    </style>
+}

@@ -1,0 +1,344 @@
+@model List<RealEstateApp.Application.ViewModels.Propiedades.PropiedadViewModel>
+@{
+    ViewData["Title"] = "Mantenimiento de Propiedades";
+}
+
+<div class="container">
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index">
+                    <i class="bi bi-house-door"></i> Home del Agente
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Mantenimiento de Propiedades</li>
+        </ol>
+    </nav>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-5">
+                        <i class="bi bi-gear text-primary"></i> 
+                        Mantenimiento de Propiedades
+                    </h1>
+                    <p class="lead text-muted">
+                        Gestiona tus propiedades disponibles 
+                        <span class="badge bg-secondary ms-2">@Model.Count propiedades</span>
+                    </p>
+                </div>
+                <div>
+                    <a asp-action="CrearPropiedad" class="btn btn-success btn-lg">
+                        <i class="bi bi-plus-circle"></i> Nueva Propiedad
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label">Buscar por código</label>
+                            <input type="text" class="form-control" id="filtro-codigo" placeholder="Ej: PROP001">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Precio mínimo (DOP)</label>
+                            <input type="number" class="form-control" id="filtro-precio-min" placeholder="500,000">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Precio máximo (DOP)</label>
+                            <input type="number" class="form-control" id="filtro-precio-max" placeholder="10,000,000">
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-primary w-100" id="btn-filtrar">
+                                <i class="bi bi-search"></i> Filtrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="row" id="propiedades-container">
+            @foreach (var propiedad in Model)
+            {
+                <div class="col-lg-4 col-md-6 mb-4 propiedad-item" 
+                     data-codigo="@propiedad.Codigo.ToLower()" 
+                     data-precio="@propiedad.Precio">
+                    <div class="card h-100 shadow-sm hover-shadow">
+                        <div class="position-relative">
+                            @if (!string.IsNullOrEmpty(propiedad.ImagenPrincipal))
+                            {
+                                <img src="~/@propiedad.ImagenPrincipal" class="card-img-top" alt="@propiedad.TipoPropiedad" style="height: 200px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <img src="~/images/no-image.png" class="card-img-top" alt="Sin imagen" style="height: 200px; object-fit: cover;">
+                            }
+                            
+                            <span class="badge bg-success position-absolute top-0 start-0 m-2">
+                                <i class="bi bi-eye-fill"></i> Disponible
+                            </span>
+                            
+                            <span class="badge bg-primary position-absolute top-0 end-0 m-2">@propiedad.TipoVenta</span>
+                        </div>
+
+                        <div class="card-body">
+                            <h6 class="text-muted mb-2">@propiedad.TipoPropiedad</h6>
+                            
+                            <h5 class="card-title">
+                                <span class="badge bg-light text-dark me-2">@propiedad.Codigo</span>
+                            </h5>
+                            
+                            <h4 class="text-primary fw-bold mb-3">
+                                @propiedad.Precio.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                            </h4>
+                            
+                            @if (!string.IsNullOrEmpty(propiedad.Descripcion))
+                            {
+                                <p class="text-muted small mb-3">
+                                    @(propiedad.Descripcion.Length > 70 ? propiedad.Descripcion.Substring(0, 70) + "..." : propiedad.Descripcion)
+                                </p>
+                            }
+                            
+                            <div class="row text-center mb-3">
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <i class="bi bi-door-open text-primary"></i>
+                                        <div class="fw-bold">@propiedad.CantidadHabitaciones</div>
+                                        <small class="text-muted">Habitaciones</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border-end">
+                                        <i class="bi bi-droplet text-info"></i>
+                                        <div class="fw-bold">@propiedad.CantidadBanos</div>
+                                        <small class="text-muted">Baños</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <i class="bi bi-rulers text-success"></i>
+                                    <div class="fw-bold">@propiedad.TamanoEnMetros</div>
+                                    <small class="text-muted">m²</small>
+                                </div>
+                            </div>
+
+                            <small class="text-muted">
+                                <i class="bi bi-calendar"></i> 
+                                Creada: @propiedad.FechaCreacion.ToString("dd/MM/yyyy")
+                            </small>
+                        </div>
+
+                        <div class="card-footer">
+                            <div class="row g-2">
+                                <div class="col-12 mb-2">
+                                    <a asp-controller="Home" asp-action="Details" asp-route-id="@propiedad.Id" 
+                                       class="btn btn-outline-primary w-100">
+                                        <i class="bi bi-eye"></i> Ver Detalles Completos
+                                    </a>
+                                </div>
+                                
+                                <div class="col-6">
+                                    <a asp-action="EditarPropiedad" asp-route-id="@propiedad.Id" 
+                                       class="btn btn-warning w-100">
+                                        <i class="bi bi-pencil"></i> Editar
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a asp-action="EliminarPropiedad" asp-route-id="@propiedad.Id" 
+                                       class="btn btn-danger w-100 btn-eliminar">
+                                        <i class="bi bi-trash"></i> Eliminar
+                                    </a>
+                                </div>
+                                
+                                <div class="col-6">
+                                    <a asp-action="Ofertas" asp-route-propiedadId="@propiedad.Id" 
+                                       class="btn btn-outline-success w-100 btn-sm">
+                                        <i class="bi bi-currency-dollar"></i> Ofertas
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a asp-action="Conversaciones" asp-route-propiedadId="@propiedad.Id" 
+                                       class="btn btn-outline-info w-100 btn-sm">
+                                        <i class="bi bi-chat-text"></i> Chat
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-house display-1 text-muted mb-4"></i>
+                        <h3 class="text-muted">No tienes propiedades disponibles</h3>
+                        <p class="lead text-muted mb-4">
+                            Las propiedades vendidas no aparecen aquí. Para gestionarlas, ve al Home del Agente.
+                        </p>
+                        <div class="d-grid gap-2 d-md-block">
+                            <a asp-action="CrearPropiedad" class="btn btn-success btn-lg">
+                                <i class="bi bi-plus-circle"></i> Crear Primera Propiedad
+                            </a>
+                            <a asp-action="Index" class="btn btn-outline-primary btn-lg">
+                                <i class="bi bi-arrow-left"></i> Volver al Home
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <h4 class="text-primary">@Model.Count</h4>
+                                <small class="text-muted">Propiedades Disponibles</small>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-success">
+                                    @Model.Sum(p => p.Precio).ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                                </h4>
+                                <small class="text-muted">Valor Total en Inventario</small>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-info">
+                                    @Model.Average(p => p.Precio).ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                                </h4>
+                                <small class="text-muted">Precio Promedio</small>
+                            </div>
+                            <div class="col-md-3">
+                                <h4 class="text-warning">@Model.Sum(p => p.TamanoEnMetros)</h4>
+                                <small class="text-muted">m² Totales</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <style>
+        .hover-shadow {
+            transition: all 0.3s ease;
+        }
+        .hover-shadow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+        
+        .propiedad-item {
+            transition: opacity 0.3s ease;
+        }
+        
+        .propiedad-item.d-none {
+            display: none !important;
+        }
+        
+        .btn-eliminar:hover {
+            transform: scale(1.05);
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            function aplicarFiltros() {
+                const filtroCodigo = $('#filtro-codigo').val().toLowerCase();
+                const precioMin = parseFloat($('#filtro-precio-min').val()) || 0;
+                const precioMax = parseFloat($('#filtro-precio-max').val()) || Number.MAX_VALUE;
+                
+                let countVisible = 0;
+                
+                $('.propiedad-item').each(function() {
+                    const codigo = $(this).data('codigo');
+                    const precio = parseFloat($(this).data('precio'));
+                    
+                    const matchCodigo = !filtroCodigo || codigo.includes(filtroCodigo);
+                    const matchPrecio = precio >= precioMin && precio <= precioMax;
+                    
+                    if (matchCodigo && matchPrecio) {
+                        $(this).removeClass('d-none');
+                        countVisible++;
+                    } else {
+                        $(this).addClass('d-none');
+                    }
+                });
+                
+                if (countVisible === 0 && $('.propiedad-item').length > 0) {
+                    if ($('#no-results').length === 0) {
+                        $('#propiedades-container').append(`
+                            <div class="col-12 text-center" id="no-results">
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle"></i>
+                                    No se encontraron propiedades con los filtros aplicados
+                                </div>
+                            </div>
+                        `);
+                    }
+                } else {
+                    $('#no-results').remove();
+                }
+            }
+            
+            $('#btn-filtrar').on('click', aplicarFiltros);
+            
+            $('#filtro-codigo, #filtro-precio-min, #filtro-precio-max').on('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    aplicarFiltros();
+                }
+            });
+            
+            $(document).on('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    $('#filtro-codigo, #filtro-precio-min, #filtro-precio-max').val('');
+                    aplicarFiltros();
+                }
+            });
+            
+            $('.btn-eliminar').on('click', function(e) {
+                e.preventDefault();
+                const href = $(this).attr('href');
+                const propiedad = $(this).closest('.propiedad-item').find('.card-title').text().trim();
+                
+                if (confirm(`¿Está seguro que desea eliminar la propiedad ${propiedad}?\n\nEsta acción no se puede deshacer.`)) {
+                    window.location.href = href;
+                }
+            });
+            
+            $('#filtro-precio-min, #filtro-precio-max').on('input', function() {
+                let valor = $(this).val().replace(/[^\d]/g, '');
+                if (valor) {
+                    const formatted = parseInt(valor).toLocaleString('es-DO');
+                    $(this).attr('data-raw-value', valor);
+                }
+            });
+            
+            $('.propiedad-item').hide().each(function(index) {
+                $(this).delay(index * 100).fadeIn(500);
+            });
+        });
+    </script>
+}

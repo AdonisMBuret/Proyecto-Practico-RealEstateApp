@@ -1,0 +1,291 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Propiedades Disponibles";
+}
+
+<div class="container">
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-4">Propiedades Disponibles</h1>
+            <p class="lead">Encuentra tu propiedad ideal</p>
+        </div>
+    </div>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-funnel"></i> Filtros de Búsqueda</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Index" method="get">
+                        <div class="row g-3">
+                            
+                            <div class="col-md-4">
+                                <label asp-for="Filtros.CodigoPropiedad" class="form-label">Código de Propiedad</label>
+                                <input asp-for="Filtros.CodigoPropiedad" class="form-control" placeholder="Ej: PROP001" />
+                            </div>
+
+                            
+                            <div class="col-md-4">
+                                <label asp-for="Filtros.TipoPropiedadId" class="form-label">Tipo de Propiedad</label>
+                                <select asp-for="Filtros.TipoPropiedadId" class="form-select">
+                                    <option value="">Todos los tipos</option>
+                                    @{
+                                        
+                                        var tipos = (ViewBag.TiposPropiedades as List<RealEstateApp.Application.ViewModels.Catalogos.TipoPropiedadViewModel>)
+                                                    ?? new List<RealEstateApp.Application.ViewModels.Catalogos.TipoPropiedadViewModel>();
+                                    }
+                                    @foreach (var tipo in tipos)
+                                    {
+                                        <option value="@tipo.Id">@tipo.Nombre</option>
+                                    }
+                                </select>
+                            </div>
+
+                            
+                            <div class="col-md-2">
+                                <label asp-for="Filtros.PrecioMinimo" class="form-label">Precio Mín. (DOP)</label>
+                                <input asp-for="Filtros.PrecioMinimo" class="form-control" type="number" placeholder="500,000" />
+                            </div>
+
+                            
+                            <div class="col-md-2">
+                                <label asp-for="Filtros.PrecioMaximo" class="form-label">Precio Máx. (DOP)</label>
+                                <input asp-for="Filtros.PrecioMaximo" class="form-control" type="number" placeholder="10,000,000" />
+                            </div>
+
+                            
+                            <div class="col-md-3">
+                                <label asp-for="Filtros.CantidadHabitaciones" class="form-label">Habitaciones Mín.</label>
+                                <input asp-for="Filtros.CantidadHabitaciones" class="form-control" type="number" min="0" />
+                            </div>
+
+                            
+                            <div class="col-md-3">
+                                <label asp-for="Filtros.CantidadBanos" class="form-label">Baños Mín.</label>
+                                <input asp-for="Filtros.CantidadBanos" class="form-control" type="number" min="0" />
+                            </div>
+
+                            
+                            <div class="col-md-6">
+                                <label class="form-label d-block">&nbsp;</label>
+                                <button type="submit" class="btn btn-primary me-2">
+                                    <i class="bi bi-search"></i> Buscar
+                                </button>
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Limpiar
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row">
+        @if (Model.Propiedades != null && Model.Propiedades.Any())
+        {
+            @foreach (var propiedad in Model.Propiedades)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm hover-shadow">
+                        
+                        <div class="position-relative">
+                            @if (!string.IsNullOrEmpty(propiedad.ImagenPrincipal))
+                            {
+                                <img src="~/@propiedad.ImagenPrincipal" class="card-img-top" alt="@propiedad.TipoPropiedad" style="height: 250px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <img src="~/images/no-image.png" class="card-img-top" alt="Sin imagen" style="height: 250px; object-fit: cover;">
+                            }
+                            
+                            <span class="badge bg-primary position-absolute top-0 end-0 m-2">@propiedad.TipoVenta</span>
+                        </div>
+
+                        <div class="card-body">
+                            
+                            <h6 class="text-muted mb-2">@propiedad.TipoPropiedad</h6>
+                            
+                            
+                            <h5 class="card-title">Código: @propiedad.Codigo</h5>
+                            
+                            
+                            <h4 class="text-primary fw-bold">
+                                @propiedad.Precio.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                            </h4>
+                            
+                            
+                            <div class="d-flex justify-content-between mt-3 mb-3">
+                                <span title="Habitaciones">
+                                    <i class="bi bi-door-open"></i> @propiedad.CantidadHabitaciones
+                                </span>
+                                <span title="Baños">
+                                    <i class="bi bi-droplet"></i> @propiedad.CantidadBanos
+                                </span>
+                                <span title="Tamaño">
+                                    <i class="bi bi-rulers"></i> @propiedad.TamanoEnMetros m²
+                                </span>
+                            </div>
+
+                            
+                            <div class="d-grid gap-2">
+                                
+                                <a asp-action="Details" asp-route-id="@propiedad.Id" class="btn btn-outline-primary">
+                                    <i class="bi bi-eye"></i> Ver Detalles
+                                </a>
+                                
+                                
+                                @if (User.IsInRole("Cliente"))
+                                {
+                                    var esFavorita = Model.PropiedadesFavoritas.Contains(propiedad.Id);
+                                    <button type="button" 
+                                            class="btn @(esFavorita ? "btn-danger" : "btn-outline-danger") favorito-btn" 
+                                            data-propiedad-id="@propiedad.Id" 
+                                            data-es-favorito="@esFavorita.ToString().ToLower()">
+                                        <i class="bi bi-heart@(esFavorita ? "-fill" : "")"></i>
+                                        <span class="favorito-text">@(esFavorita ? "Quitar de Favoritos" : "Agregar a Favoritos")</span>
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle"></i> 
+                    @if (!string.IsNullOrEmpty(Model.Filtros?.CodigoPropiedad) || Model.Filtros?.TipoPropiedadId.HasValue == true)
+                    {
+                        <span>No se encontraron propiedades con los filtros seleccionados.</span>
+                    }
+                    else
+                    {
+                        <span>No hay propiedades disponibles en este momento.</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .hover-shadow {
+            transition: all 0.3s ease;
+        }
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+        }
+        
+        .favorito-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .favorito-btn:disabled {
+            opacity: 0.6;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            // Handler para botones de favoritos con AJAX
+            $('.favorito-btn').on('click', function() {
+                const button = $(this);
+                const propiedadId = button.data('propiedad-id');
+                const esFavorito = button.data('es-favorito');
+                
+                // Deshabilitar botón durante la petición
+                button.prop('disabled', true);
+                
+                // Cambiar texto temporalmente
+                const originalText = button.find('.favorito-text').text();
+                button.find('.favorito-text').text('Procesando...');
+                
+                $.ajax({
+                    url: '@Url.Action("ToggleFavorito", "Home")',
+                    type: 'POST',
+                    data: {
+                        propiedadId: propiedadId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Actualizar estado del botón
+                            const nuevoEsFavorito = response.isFavorite;
+                            button.data('es-favorito', nuevoEsFavorito);
+                            
+                            // Actualizar clases CSS
+                            if (nuevoEsFavorito) {
+                                button.removeClass('btn-outline-danger').addClass('btn-danger');
+                                button.find('i').removeClass('bi-heart').addClass('bi-heart-fill');
+                                button.find('.favorito-text').text('Quitar de Favoritos');
+                            } else {
+                                button.removeClass('btn-danger').addClass('btn-outline-danger');
+                                button.find('i').removeClass('bi-heart-fill').addClass('bi-heart');
+                                button.find('.favorito-text').text('Agregar a Favoritos');
+                            }
+                            
+                            // Mostrar mensaje de éxito
+                            showToast(response.message, 'success');
+                        } else {
+                            // Restaurar texto original en caso de error
+                            button.find('.favorito-text').text(originalText);
+                            showToast(response.message, 'error');
+                        }
+                    },
+                    error: function() {
+                        // Restaurar texto original en caso de error
+                        button.find('.favorito-text').text(originalText);
+                        showToast('Error al actualizar favoritos. Intente nuevamente.', 'error');
+                    },
+                    complete: function() {
+                        // Rehabilitar botón
+                        button.prop('disabled', false);
+                    }
+                });
+            });
+        });
+        
+        // Función para mostrar mensajes tipo toast
+        function showToast(message, type) {
+            const toastClass = type === 'success' ? 'bg-success' : 'bg-danger';
+            const toastHtml = `
+                <div class="toast align-items-center text-white ${toastClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            // Crear contenedor de toasts si no existe
+            if ($('#toast-container').length === 0) {
+                $('body').append('<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;"></div>');
+            }
+            
+            const $toast = $(toastHtml);
+            $('#toast-container').append($toast);
+            
+            // Mostrar toast
+            const bsToast = new bootstrap.Toast($toast[0]);
+            bsToast.show();
+            
+            // Eliminar del DOM después de ocultarse
+            $toast[0].addEventListener('hidden.bs.toast', function () {
+                $toast.remove();
+            });
+        }
+    </script>
+
+    @Html.AntiForgeryToken()
+}

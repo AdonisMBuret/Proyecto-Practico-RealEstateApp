@@ -1,0 +1,127 @@
+@model RealEstateApp.Application.ViewModels.Catalogos.SaveTipoPropiedadViewModel
+@{
+    ViewData["Title"] = "Editar Tipo de Propiedad";
+    var tipoPropiedadId = ViewData["TipoPropiedadId"];
+    var tipoPropiedadNombre = ViewData["TipoPropiedadNombre"];
+}
+
+<div class="container">
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Admin" asp-action="Index">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Index">Tipos de Propiedades</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Editar</li>
+        </ol>
+    </nav>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="bi bi-pencil text-primary"></i> Editar Tipo de Propiedad</h2>
+            <p class="text-muted">Modificar información de: <strong>@tipoPropiedadNombre</strong></p>
+        </div>
+    </div>
+
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-house-fill"></i> Información del Tipo</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit" asp-route-id="@tipoPropiedadId" method="post">
+                        <div asp-validation-summary="All" class="alert alert-danger d-none"></div>
+
+                        
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label required">
+                                <i class="bi bi-tag"></i> @Html.DisplayNameFor(m => m.Nombre)
+                            </label>
+                            <input asp-for="Nombre" 
+                                   class="form-control form-control-lg" 
+                                   placeholder="Ej: Casa, Apartamento, Villa..."
+                                   maxlength="50" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle"></i> Nombre identificativo del tipo de propiedad (máximo 50 caracteres)
+                            </div>
+                        </div>
+
+                        
+                        <div class="mb-4">
+                            <label asp-for="Descripcion" class="form-label required">
+                                <i class="bi bi-text-paragraph"></i> @Html.DisplayNameFor(m => m.Descripcion)
+                            </label>
+                            <textarea asp-for="Descripcion" 
+                                      class="form-control" 
+                                      rows="4" 
+                                      placeholder="Describa las características principales de este tipo de propiedad..."
+                                      maxlength="200"></textarea>
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle"></i> Descripción detallada del tipo de propiedad (máximo 200 caracteres)
+                            </div>
+                        </div>
+
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary me-md-2">
+                                <i class="bi bi-arrow-left"></i> Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-check-circle"></i> Guardar Cambios
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .required::after {
+        content: " *";
+        color: #dc3545;
+    }
+    
+    .form-control:focus {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    
+    <script>
+        // Validación en tiempo real
+        $(document).ready(function() {
+            // Contador de caracteres para descripción
+            $('#Descripcion').on('input', function() {
+                const maxLength = 200;
+                const currentLength = $(this).val().length;
+                const remaining = maxLength - currentLength;
+                
+                $(this).siblings('.form-text').html(
+                    '<i class="bi bi-info-circle"></i> Descripción detallada del tipo de propiedad (' + remaining + ' caracteres restantes)'
+                );
+                
+                if (remaining < 20) {
+                    $(this).siblings('.form-text').addClass('text-warning');
+                } else {
+                    $(this).siblings('.form-text').removeClass('text-warning');
+                }
+            });
+        });
+    </script>
+}

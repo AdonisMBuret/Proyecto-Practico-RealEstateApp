@@ -1,0 +1,178 @@
+@model AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard Administrador";
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid">
+   
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5">
+                <i class="bi bi-speedometer2 text-primary"></i> Dashboard del Administrador
+            </h1>
+            <p class="text-muted">Panel de control con indicadores del sistema</p>
+        </div>
+    </div>
+
+    <div class="row mb-5">
+      
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-house-fill"></i> Propiedades
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="p-3">
+                                <h2 class="text-success mb-0">@Model.PropiedadesDisponibles</h2>
+                                <small class="text-muted">Disponibles</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3">
+                                <h2 class="text-info mb-0">@Model.PropiedadesVendidas</h2>
+                                <small class="text-muted">Vendidas</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <div class="progress" style="height: 8px;">
+                            @if (Model.TotalPropiedades > 0)
+                            {
+                                <div class="progress-bar bg-info" role="progressbar" 
+                                     style="width: @Model.PorcentajePropiedadesVendidas.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)%"
+                                     aria-valuenow="@Model.PorcentajePropiedadesVendidas" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            }
+                        </div>
+                        <small class="text-muted">
+                            @Model.PorcentajePropiedadesVendidas.ToString("F1")% vendidas de @Model.TotalPropiedades propiedades
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-people-fill"></i> Usuarios del Sistema
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                     
+                        <div class="col-4 text-center">
+                            <div class="p-2">
+                                <h4 class="text-primary mb-1">@Model.TotalAgentes</h4>
+                                <small class="text-muted d-block">Agentes</small>
+                                <div class="mt-2">
+                                    <span class="badge bg-success">@Model.AgentesActivos</span>
+                                    <span class="badge bg-secondary">@Model.AgentesInactivos</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                  
+                        <div class="col-4 text-center">
+                            <div class="p-2">
+                                <h4 class="text-warning mb-1">@Model.TotalClientes</h4>
+                                <small class="text-muted d-block">Clientes</small>
+                                <div class="mt-2">
+                                    <span class="badge bg-success">@Model.ClientesActivos</span>
+                                    <span class="badge bg-secondary">@Model.ClientesInactivos</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                       
+                        <div class="col-4 text-center">
+                            <div class="p-2">
+                                <h4 class="text-danger mb-1">@Model.TotalDesarrolladores</h4>
+                                <small class="text-muted d-block">Desarrolladores</small>
+                                <div class="mt-2">
+                                    <span class="badge bg-success">@Model.DesarrolladoresActivos</span>
+                                    <span class="badge bg-secondary">@Model.DesarrolladoresInactivos</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle"></i> Navegación Rápida
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info" role="alert">
+                        <h6 class="alert-heading"><i class="bi bi-lightbulb"></i> Accede a las funcionalidades principales:</h6>
+                        <ul class="mb-0">
+                            <li><strong>Gestión de Agentes:</strong> Administra agentes inmobiliarios desde el menú superior</li>
+                            <li><strong>Mantenimiento de Usuarios:</strong> Gestiona administradores y desarrolladores</li>
+                            <li><strong>Catálogos del Sistema:</strong> Configura tipos de propiedades, ventas y mejoras</li>
+                            <li><strong>Dashboard en tiempo real:</strong> Monitorea estadísticas y actividad del sistema</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .card {
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .progress {
+            border-radius: 10px;
+        }
+        
+        .progress-bar {
+            border-radius: 10px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+           
+            $('h2, h4').each(function() {
+                const $this = $(this);
+                const countTo = parseInt($this.text());
+                
+                if (!isNaN(countTo)) {
+                    $({ countNum: 0 }).animate({
+                        countNum: countTo
+                    }, {
+                        duration: 1500,
+                        easing: 'swing',
+                        step: function() {
+                            $this.text(Math.floor(this.countNum));
+                        },
+                        complete: function() {
+                            $this.text(this.countNum);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

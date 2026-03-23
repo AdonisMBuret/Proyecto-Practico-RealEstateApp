@@ -1,0 +1,275 @@
+@model List<AdminAgenteViewModel>
+@{
+    ViewData["Title"] = "Gestión de Agentes";
+}
+
+<div class="container-fluid">
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-5">
+                        <i class="bi bi-people text-primary"></i> Gestión de Agentes
+                    </h1>
+                    <p class="text-muted">Administre los agentes del sistema y sus propiedades</p>
+                </div>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Volver al Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+  
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h4 class="text-primary">@Model.Count</h4>
+                        <small class="text-muted">Total Agentes</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h4 class="text-success">@Model.Count(a => a.IsActive)</h4>
+                        <small class="text-muted">Activos</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h4 class="text-secondary">@Model.Count(a => !a.IsActive)</h4>
+                        <small class="text-muted">Inactivos</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h4 class="text-info">@Model.Sum(a => a.CantidadPropiedades)</h4>
+                        <small class="text-muted">Total Propiedades</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-list-ul"></i> Lista de Agentes
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col" style="width: 200px;">Agente</th>
+                                        <th scope="col">Correo</th>
+                                        <th scope="col" class="text-center" style="width: 120px;">Propiedades</th>
+                                        <th scope="col" class="text-center" style="width: 100px;">Estado</th>
+                                        <th scope="col" class="text-center" style="width: 120px;">Registro</th>
+                                        <th scope="col" class="text-center" style="width: 180px;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var agente in Model)
+                                    {
+                                        <tr class="@(agente.IsActive ? "" : "table-secondary")">
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-circle me-3 @(agente.IsActive ? "bg-primary" : "bg-secondary")">
+                                                        @agente.Nombre.FirstOrDefault()@agente.Apellido.FirstOrDefault()
+                                                    </div>
+                                                    <div>
+                                                        <strong>@agente.NombreCompleto</strong>
+                                                        <br>
+                                                        <small class="text-muted">@@@agente.UserName</small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                <i class="bi bi-envelope text-muted"></i> @agente.Email
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                @if (agente.CantidadPropiedades > 0)
+                                                {
+                                                    <span class="badge bg-info">@agente.CantidadPropiedades</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-light text-dark">0</span>
+                                                }
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                @if (agente.IsActive)
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle"></i> Activo
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">
+                                                        <i class="bi bi-x-circle"></i> Inactivo
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <small class="text-muted">
+                                                    @agente.FechaCreacion.ToString("dd/MM/yyyy")
+                                                </small>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <div class="btn-group" role="group">
+                                                  
+                                                    <button type="button" 
+                                                            class="btn btn-sm @(agente.IsActive ? "btn-outline-warning" : "btn-outline-success") toggle-estado-btn" 
+                                                            data-agente-id="@agente.Id" 
+                                                            data-is-active="@agente.IsActive.ToString().ToLower()"
+                                                            title="@(agente.IsActive ? "Desactivar" : "Activar") agente">
+                                                        <i class="bi bi-@(agente.IsActive ? "pause" : "play")-circle"></i>
+                                                    </button>
+                                                    
+                                                   
+                                                    <a asp-action="EliminarAgente" asp-route-id="@agente.Id" 
+                                                       class="btn btn-sm btn-outline-danger" 
+                                                       title="Eliminar agente y sus propiedades">
+                                                        <i class="bi bi-trash"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-people display-1 text-muted mb-3"></i>
+                        <h3 class="text-muted">No hay agentes registrados</h3>
+                        <p class="text-muted">Los agentes aparecerán aquí cuando se registren en el sistema</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <style>
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .table th {
+            border-top: none;
+            font-weight: 600;
+        }
+        
+        .btn-group .btn {
+            margin: 0 1px;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+        
+        .toggle-estado-btn {
+            transition: all 0.3s ease;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            
+            $('.toggle-estado-btn').on('click', function() {
+                const button = $(this);
+                const agenteId = button.data('agente-id');
+                const isActive = button.data('is-active');
+                
+                const accion = isActive ? 'desactivar' : 'activar';
+                const mensaje = `¿Está seguro que desea ${accion} este agente?`;
+                
+                if (!confirm(mensaje)) {
+                    return;
+                }
+                
+               
+                button.prop('disabled', true);
+                
+                $.ajax({
+                    url: '@Url.Action("ToggleAgenteEstado", "Admin")',
+                    type: 'POST',
+                    data: {
+                        agenteId: agenteId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                          
+                            location.reload();
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error al actualizar el estado del agente. Intente nuevamente.');
+                    },
+                    complete: function() {
+                        button.prop('disabled', false);
+                    }
+                });
+            });
+            
+          
+            $('h4').each(function() {
+                const $this = $(this);
+                const countTo = parseInt($this.text());
+                
+                if (!isNaN(countTo)) {
+                    $({ countNum: 0 }).animate({
+                        countNum: countTo
+                    }, {
+                        duration: 1000,
+                        easing: 'swing',
+                        step: function() {
+                            $this.text(Math.floor(this.countNum));
+                        },
+                        complete: function() {
+                            $this.text(this.countNum);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    @Html.AntiForgeryToken()
+}

@@ -1,0 +1,132 @@
+@model RealEstateApp.Application.ViewModels.Catalogos.TipoPropiedadViewModel
+@{
+    ViewData["Title"] = "Eliminar Tipo de Propiedad";
+}
+
+<div class="container">
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Admin" asp-action="Index">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Index">Tipos de Propiedades</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Eliminar</li>
+        </ol>
+    </nav>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="bi bi-exclamation-triangle text-danger"></i> Eliminar Tipo de Propiedad</h2>
+            <p class="text-muted">¿Está seguro que desea eliminar este tipo de propiedad?</p>
+        </div>
+    </div>
+
+    
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0"><i class="bi bi-trash"></i> Confirmación de Eliminación</h5>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="alert alert-warning" role="alert">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <strong>¡Atención!</strong> Esta acción no se puede deshacer.
+                        @if (Model.CantidadPropiedades > 0)
+                        {
+                            <text>
+                                <br />
+                                <strong>Este tipo tiene @Model.CantidadPropiedades propiedad(es) asociada(s) y no puede ser eliminado.</strong>
+                            </text>
+                        }
+                        else
+                        {
+                            <text>
+                                <br />
+                                Se eliminará permanentemente el tipo de propiedad del sistema.
+                            </text>
+                        }
+                    </div>
+
+                    
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h6 class="mb-3"><i class="bi bi-info-circle"></i> Información del Tipo</h6>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <dl class="row mb-0">
+                                        <dt class="col-sm-4">Nombre:</dt>
+                                        <dd class="col-sm-8">@Model.Nombre</dd>
+
+                                        <dt class="col-sm-4">Descripción:</dt>
+                                        <dd class="col-sm-8">@Model.Descripcion</dd>
+
+                                        <dt class="col-sm-4">Propiedades:</dt>
+                                        <dd class="col-sm-8">
+                                            <span class="badge bg-@(Model.CantidadPropiedades > 0 ? "warning" : "success")">
+                                                @Model.CantidadPropiedades propiedad(es)
+                                            </span>
+                                        </dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-5">
+                            @if (Model.CantidadPropiedades > 0)
+                            {
+                                <div class="alert alert-danger h-100">
+                                    <h6><i class="bi bi-lock"></i> No se puede eliminar</h6>
+                                    <p class="mb-0">Este tipo de propiedad tiene <strong>@Model.CantidadPropiedades</strong> propiedad(es) asociada(s).</p>
+                                    <hr />
+                                    <p class="mb-0">
+                                        <small>
+                                            Para eliminarlo, primero debe:
+                                            <br />• Cambiar el tipo de las propiedades asociadas
+                                            <br />• O eliminar las propiedades que lo usan
+                                        </small>
+                                    </p>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-success h-100">
+                                    <h6><i class="bi bi-check-circle"></i> Listo para eliminar</h6>
+                                    <p class="mb-0">Este tipo no tiene propiedades asociadas y puede ser eliminado de forma segura.</p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    
+                    <div class="d-flex justify-content-end mt-4">
+                        <a asp-action="Index" class="btn btn-secondary me-2">
+                            <i class="bi bi-arrow-left"></i> Volver al Listado
+                        </a>
+
+                        @if (Model.CantidadPropiedades == 0)
+                        {
+                            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-danger"
+                                        onclick="return confirm('¿Está completamente seguro que desea eliminar el tipo \'@Model.Nombre\'?')">
+                                    <i class="bi bi-trash"></i> Confirmar Eliminación
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-secondary" disabled>
+                                <i class="bi bi-lock"></i> No se puede eliminar
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

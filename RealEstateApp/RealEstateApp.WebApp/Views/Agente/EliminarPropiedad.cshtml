@@ -1,0 +1,275 @@
+﻿@model PropiedadViewModel
+@{
+    ViewData["Title"] = "Eliminar Propiedad";
+}
+
+<div class="container">
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index">
+                    <i class="bi bi-house-door"></i> Home del Agente
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="MantenimientoPropiedades">Mantenimiento</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Eliminar Propiedad</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <div class="alert alert-danger shadow" role="alert">
+                <div class="d-flex">
+                    <div class="flex-shrink-0">
+                        <i class="bi bi-exclamation-triangle-fill fs-2"></i>
+                    </div>
+                    <div class="flex-grow-1 ms-3">
+                        <h4 class="alert-heading">¡Confirmación de Eliminación!</h4>
+                        <p class="mb-0">
+                            <strong>¿Está seguro que desea eliminar esta propiedad?</strong>
+                        </p>
+                        <hr>
+                        <p class="mb-0">
+                            <i class="bi bi-info-circle"></i>
+                            Esta acción <strong>no se puede deshacer</strong>. La propiedad será eliminada permanentemente del sistema.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-trash"></i> 
+                        Propiedad a Eliminar
+                    </h5>
+                </div>
+                
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-3">
+                            @if (!string.IsNullOrEmpty(Model.ImagenPrincipal))
+                            {
+                                <img src="~/@Model.ImagenPrincipal" 
+                                     class="img-fluid rounded border" 
+                                     alt="@Model.TipoPropiedad"
+                                     style="max-height: 200px; width: 100%; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <div class="bg-light border rounded d-flex align-items-center justify-content-center" 
+                                     style="height: 200px;">
+                                    <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="col-md-8">
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <strong>Código:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="badge bg-primary fs-6">@Model.Codigo</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <strong>Tipo:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    @Model.TipoPropiedad
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <strong>Precio:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="text-primary fw-bold fs-5">
+                                        @Model.Precio.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <strong>Tipo de Venta:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="badge bg-info">@Model.TipoVenta</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <strong>Estado:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    <span class="badge bg-success">@Model.EstadoTexto</span>
+                                </div>
+                            </div>
+
+                            <div class="row mb-3">
+                                <div class="col-sm-4">
+                                    <strong>Fecha de Creación:</strong>
+                                </div>
+                                <div class="col-sm-8">
+                                    @Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <h6 class="text-muted mb-3">
+                        <i class="bi bi-rulers"></i> Especificaciones
+                    </h6>
+                    
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="border-end">
+                                <i class="bi bi-door-open text-primary fs-4"></i>
+                                <div class="fw-bold fs-5">@Model.CantidadHabitaciones</div>
+                                <small class="text-muted">Habitaciones</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="border-end">
+                                <i class="bi bi-droplet text-info fs-4"></i>
+                                <div class="fw-bold fs-5">@Model.CantidadBanos</div>
+                                <small class="text-muted">Baños</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="bi bi-rulers text-success fs-4"></i>
+                            <div class="fw-bold fs-5">@Model.TamanoEnMetros</div>
+                            <small class="text-muted">Metros Cuadrados</small>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.Descripcion))
+                    {
+                        <hr>
+                        <h6 class="text-muted mb-3">
+                            <i class="bi bi-card-text"></i> Descripción
+                        </h6>
+                        <p class="text-justify">@Model.Descripcion</p>
+                    }
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="MantenimientoPropiedades" class="btn btn-secondary btn-lg">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+
+                       
+                        <form asp-action="EliminarPropiedadConfirmado" asp-route-id="@Model.Id" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-danger btn-lg" id="btn-confirmar-eliminar">
+                                <i class="bi bi-trash-fill"></i> Sí, Eliminar Propiedad
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4 bg-light">
+                <div class="card-body">
+                    <h6 class="text-muted mb-3">
+                        <i class="bi bi-info-circle"></i> Información Importante
+                    </h6>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-exclamation-triangle text-warning"></i>
+                            Al eliminar esta propiedad, <strong>se perderán todos los datos</strong> asociados permanentemente
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-chat-x text-danger"></i>
+                            Se eliminarán todos los <strong>mensajes de chat</strong> con clientes
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-currency-exchange text-danger"></i>
+                            Se eliminarán todas las <strong>ofertas recibidas</strong> de clientes
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-heart-slash text-danger"></i>
+                            Se removerá de las <strong>listas de favoritos</strong> de todos los clientes
+                        </li>
+                        <li>
+                            <i class="bi bi-images text-danger"></i>
+                            Se eliminarán todas las <strong>imágenes</strong> de la propiedad del servidor
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .hover-danger:hover {
+            background-color: #dc3545 !important;
+            border-color: #dc3545 !important;
+            transform: scale(1.05);
+            transition: all 0.3s ease;
+        }
+        
+        .alert {
+            animation: fadeInDown 0.5s ease;
+        }
+        
+        @@keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $('#btn-confirmar-eliminar').on('click', function(e) {
+                e.preventDefault();
+                
+                const propiedad = '@Model.Codigo';
+                const precio = '@Model.Precio.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))';
+                
+                if (confirm(`ÚLTIMA CONFIRMACIÓN:\n\n¿Está completamente seguro que desea eliminar la propiedad "${propiedad}" con valor de ${precio}?\n\n⚠️ ESTA ACCIÓN NO SE PUEDE DESHACER ⚠️\n\nSe eliminarán:\n- La propiedad completa\n- Todas las imágenes\n- Todos los mensajes de chat\n- Todas las ofertas recibidas\n- De las listas de favoritos\n\nEscriba "ELIMINAR" para confirmar:`)) {
+                    
+                    const confirmText = prompt('Para confirmar, escriba: ELIMINAR');
+                    
+                    if (confirmText === 'ELIMINAR') {
+                        $(this).prop('disabled', true);
+                        $(this).html('<i class="bi bi-hourglass-split"></i> Eliminando...');
+                        
+                        $(this).closest('form').submit();
+                    } else if (confirmText !== null) {
+                        alert('Texto de confirmación incorrecto. La eliminación ha sido cancelada.');
+                    }
+                }
+            });
+            
+            $('#btn-confirmar-eliminar').addClass('hover-danger');
+            
+            setTimeout(() => {
+                $('a[href*="MantenimientoPropiedades"]').focus();
+            }, 500);
+        });
+    </script>
+
+    @Html.AntiForgeryToken()
+}

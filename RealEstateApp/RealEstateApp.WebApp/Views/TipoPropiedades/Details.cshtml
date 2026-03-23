@@ -1,0 +1,174 @@
+@model RealEstateApp.Application.ViewModels.Catalogos.TipoPropiedadViewModel
+@{
+    ViewData["Title"] = "Detalles del Tipo de Propiedad";
+}
+
+<div class="container">
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Admin" asp-action="Index">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Index">Tipos de Propiedades</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Nombre</li>
+        </ol>
+    </nav>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2><i class="bi bi-house-fill text-info"></i> @Model.Nombre</h2>
+                    <p class="text-muted">Información detallada del tipo de propiedad</p>
+                </div>
+                <div>
+                    <div class="btn-group" role="group">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="bi bi-pencil"></i> Editar
+                        </a>
+                        @if (Model.CantidadPropiedades == 0)
+                        {
+                            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">
+                                <i class="bi bi-trash"></i> Eliminar
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row">
+        
+        <div class="col-md-8">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Información General</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-muted">NOMBRE</h6>
+                            <p class="fs-5">@Model.Nombre</p>
+                            
+                            <h6 class="text-muted">DESCRIPCIÓN</h6>
+                            <p>@Model.Descripcion</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted">FECHA DE CREACIÓN</h6>
+                            <p>
+                                <i class="bi bi-calendar"></i> @Model.FechaCreacion.ToString("dddd, dd 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES"))
+                                <br>
+                                <small class="text-muted">@Model.FechaCreacion.ToString("HH:mm")</small>
+                            </p>
+                            
+                            <h6 class="text-muted">ESTADO</h6>
+                            <p>
+                                @if (Model.CantidadPropiedades > 0)
+                                {
+                                    <span class="badge bg-success fs-6">
+                                        <i class="bi bi-check-circle"></i> En Uso
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary fs-6">
+                                        <i class="bi bi-circle"></i> Sin Usar
+                                    </span>
+                                }
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="col-md-4">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Estadísticas</h5>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-3">
+                        <h2 class="display-4 text-primary">@Model.CantidadPropiedades</h2>
+                        <h6 class="text-muted">PROPIEDADES REGISTRADAS</h6>
+                    </div>
+                    
+                    @if (Model.CantidadPropiedades > 0)
+                    {
+                        <div class="alert alert-success">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Este tipo está siendo utilizado</strong>
+                            <br>
+                            <small>Hay @Model.CantidadPropiedades propiedad(es) con este tipo</small>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            <strong>Sin propiedades</strong>
+                            <br>
+                            <small>No hay propiedades con este tipo</small>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-lightning"></i> Acciones Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3">
+                            <a asp-action="Index" class="btn btn-outline-secondary w-100 mb-2">
+                                <i class="bi bi-list fs-4 d-block"></i>
+                                Volver al Listado
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary w-100 mb-2">
+                                <i class="bi bi-pencil fs-4 d-block"></i>
+                                Editar Información
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a asp-action="Create" class="btn btn-outline-success w-100 mb-2">
+                                <i class="bi bi-plus-circle fs-4 d-block"></i>
+                                Crear Nuevo Tipo
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            @if (Model.CantidadPropiedades == 0)
+                            {
+                                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger w-100 mb-2">
+                                    <i class="bi bi-trash fs-4 d-block"></i>
+                                    Eliminar Tipo
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-outline-secondary w-100 mb-2" disabled>
+                                    <i class="bi bi-lock fs-4 d-block"></i>
+                                    No se puede eliminar
+                                </button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

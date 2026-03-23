@@ -1,0 +1,290 @@
+@model EditarAgenteViewModel
+@{
+    ViewData["Title"] = "Mi Perfil - Agente";
+}
+
+<div class="container">
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index">
+                    <i class="bi bi-house-door"></i> Home del Agente
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Mi Perfil</li>
+        </ol>
+    </nav>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5">
+                <i class="bi bi-person-circle text-primary"></i> Mi Perfil
+            </h1>
+            <p class="lead text-muted">
+                Actualiza tu información personal y de contacto
+            </p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pencil-square"></i> 
+                        Información del Agente
+                    </h5>
+                </div>
+                
+                <div class="card-body">
+                    <form asp-action="MiPerfil" method="post" enctype="multipart/form-data">
+                        <div class="row">
+                            
+                            <div class="col-md-4 text-center mb-4">
+                                <div class="mb-3">
+                                    @if (!string.IsNullOrEmpty(Model.FotoActual))
+                                    {
+                                        <img src="~/@Model.FotoActual" 
+                                             class="rounded-circle border" 
+                                             alt="Foto Actual" 
+                                             style="width: 150px; height: 150px; object-fit: cover;"
+                                             id="preview-foto">
+                                    }
+                                    else
+                                    {
+                                        <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center border" 
+                                             style="width: 150px; height: 150px;" 
+                                             id="preview-foto">
+                                            <i class="bi bi-person fs-1 text-white"></i>
+                                        </div>
+                                    }
+                                </div>
+                                <p class="text-muted small">Foto de Perfil Actual</p>
+                            </div>
+
+                            
+                            <div class="col-md-8">
+                                
+                                <div class="mb-3">
+                                    <label asp-for="Nombre" class="form-label required"></label>
+                                    <input asp-for="Nombre" class="form-control" placeholder="Ingrese su nombre">
+                                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                                </div>
+
+                                
+                                <div class="mb-3">
+                                    <label asp-for="Apellido" class="form-label required"></label>
+                                    <input asp-for="Apellido" class="form-control" placeholder="Ingrese su apellido">
+                                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                                </div>
+
+                                
+                                <div class="mb-3">
+                                    <label asp-for="Telefono" class="form-label required"></label>
+                                    <input asp-for="Telefono" class="form-control" placeholder="Ej: 809-123-4567">
+                                    <div class="form-text">
+                                        <i class="bi bi-info-circle"></i> 
+                                        Formato: 809-123-4567 o +1-809-123-4567
+                                    </div>
+                                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                                </div>
+
+                                
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input type="email" 
+                                           class="form-control" 
+                                           value="@Model.Email" 
+                                           readonly 
+                                           id="email">
+                                    <div class="form-text">
+                                        <i class="bi bi-lock"></i> 
+                                        El email no puede modificarse
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <hr>
+                                <h6>
+                                    <i class="bi bi-camera"></i> 
+                                    Actualizar Foto de Perfil <span class="text-muted">(Opcional)</span>
+                                </h6>
+                                
+                                <div class="mb-3">
+                                    <label asp-for="NuevaFoto" class="form-label"></label>
+                                    <input asp-for="NuevaFoto" 
+                                           class="form-control" 
+                                           type="file" 
+                                           accept="image/*"
+                                           id="nueva-foto">
+                                    <div class="form-text">
+                                        <i class="bi bi-info-circle"></i> 
+                                        Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 2MB
+                                    </div>
+                                    <span asp-validation-for="NuevaFoto" class="text-danger"></span>
+                                </div>
+
+                                
+                                <div id="nueva-foto-preview" class="d-none text-center mt-3">
+                                    <p class="text-muted mb-2">Vista previa de nueva foto:</p>
+                                    <img id="preview-nueva" 
+                                         class="rounded-circle border" 
+                                         style="width: 100px; height: 100px; object-fit: cover;">
+                                </div>
+                            </div>
+                        </div>
+
+                        
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <a asp-action="Index" class="btn btn-secondary">
+                                        <i class="bi bi-arrow-left"></i> Volver al Home
+                                    </a>
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="bi bi-check-circle"></i> Guardar Cambios
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            
+            <div class="card mt-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle"></i> Información Importante
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2">
+                            <i class="bi bi-check-circle text-success"></i>
+                            <strong>Todos los campos son requeridos</strong> excepto la foto de perfil
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-shield-check text-primary"></i>
+                            Tu email de acceso <strong>no puede modificarse</strong> por seguridad
+                        </li>
+                        <li class="mb-2">
+                            <i class="bi bi-camera text-info"></i>
+                            La foto de perfil es <strong>opcional</strong> pero recomendada para generar confianza
+                        </li>
+                        <li>
+                            <i class="bi bi-telephone text-warning"></i>
+                            Mantén tu teléfono actualizado para que los clientes puedan contactarte
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+        
+        .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+        
+        #preview-nueva {
+            transition: all 0.3s ease;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            // Preview de nueva foto
+            $('#nueva-foto').on('change', function() {
+                const file = this.files[0];
+                
+                if (file) {
+                    // Validar tamaño (2MB)
+                    if (file.size > 2 * 1024 * 1024) {
+                        alert('El archivo es muy grande. Máximo 2MB permitido.');
+                        $(this).val('');
+                        $('#nueva-foto-preview').addClass('d-none');
+                        return;
+                    }
+                    
+                    // Validar tipo
+                    if (!file.type.startsWith('image/')) {
+                        alert('Por favor seleccione un archivo de imagen válido.');
+                        $(this).val('');
+                        $('#nueva-foto-preview').addClass('d-none');
+                        return;
+                    }
+                    
+                    // Mostrar preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#preview-nueva').attr('src', e.target.result);
+                        $('#nueva-foto-preview').removeClass('d-none');
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    $('#nueva-foto-preview').addClass('d-none');
+                }
+            });
+            
+            // Validación de teléfono en tiempo real
+            $('#Telefono').on('input', function() {
+                let valor = $(this).val().replace(/\D/g, ''); // Solo números
+                
+                // Formatear automáticamente
+                if (valor.length >= 3) {
+                    if (valor.length <= 6) {
+                        valor = valor.substring(0, 3) + '-' + valor.substring(3);
+                    } else if (valor.length <= 10) {
+                        valor = valor.substring(0, 3) + '-' + valor.substring(3, 6) + '-' + valor.substring(6);
+                    }
+                }
+                
+                $(this).val(valor);
+            });
+            
+            // Validación del formulario antes de envío
+            $('form').on('submit', function(e) {
+                let valido = true;
+                
+                // Validar campos requeridos
+                $('input[required]').each(function() {
+                    if (!$(this).val().trim()) {
+                        valido = false;
+                        $(this).addClass('is-invalid');
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                
+                if (!valido) {
+                    e.preventDefault();
+                    alert('Por favor complete todos los campos requeridos.');
+                    $('input.is-invalid').first().focus();
+                }
+            });
+            
+            // Limpiar validaciones al escribir
+            $('input').on('input', function() {
+                $(this).removeClass('is-invalid');
+            });
+        });
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

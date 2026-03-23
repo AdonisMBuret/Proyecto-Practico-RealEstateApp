@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Acceso Denegado";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-lg border-danger">
+            <div class="card-body text-center p-5">
+                <div class="mb-4">
+                    <i class="bi bi-shield-x text-danger" style="font-size: 5rem;"></i>
+                </div>
+                
+                <h2 class="text-danger mb-3">Acceso Denegado</h2>
+                
+                <p class="lead text-muted mb-4">
+                    No tienes los permisos necesarios para acceder a esta página.
+                </p>
+                
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <strong>Permisos insuficientes</strong><br>
+                    Esta área está restringida a usuarios con privilegios específicos.
+                </div>
+                
+                <div class="mt-4">
+                    <h6>¿Qué puedes hacer?</h6>
+                    <ul class="list-unstyled text-muted">
+                        <li><i class="bi bi-arrow-right"></i> Contacta al administrador del sistema</li>
+                        <li><i class="bi bi-arrow-right"></i> Verifica que hayas iniciado sesión correctamente</li>
+                        <li><i class="bi bi-arrow-right"></i> Asegúrate de tener el rol adecuado</li>
+                    </ul>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                    <a href="javascript:history.back()" class="btn btn-secondary me-md-2">
+                        <i class="bi bi-arrow-left"></i> Volver Atrás
+                    </a>
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-house"></i> Ir al Inicio
+                    </a>
+                </div>
+                
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            Conectado como: <strong>@User.Identity.Name</strong>
+                        </small>
+                    </div>
+                }
+                else
+                {
+                    <div class="mt-3">
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

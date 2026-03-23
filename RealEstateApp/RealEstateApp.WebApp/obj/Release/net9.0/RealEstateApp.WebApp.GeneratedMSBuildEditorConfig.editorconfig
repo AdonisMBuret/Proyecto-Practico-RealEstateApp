@@ -1,0 +1,255 @@
+is_global = true
+build_property.TargetFramework = net9.0
+build_property.TargetFramework = net9.0
+build_property.TargetPlatformMinVersion = 
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v9.0
+build_property.RootNamespace = RealEstateApp.WebApp
+build_property.RootNamespace = RealEstateApp.WebApp
+build_property.ProjectDir = C:\Users\A_M_B\source\repos\AdonisMBuret\Proyecto-Practico-RealEstateApp\RealEstateApp\RealEstateApp.WebApp\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\A_M_B\source\repos\AdonisMBuret\Proyecto-Practico-RealEstateApp\RealEstateApp\RealEstateApp.WebApp
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 9.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Account/AccessDenied.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxBY2Nlc3NEZW5pZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Admin/Administradores.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWRtaW5pc3RyYWRvcmVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Admin/Agentes.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWdlbnRlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Admin/CrearAdministrador.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ3JlYXJBZG1pbmlzdHJhZG9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Admin/CrearDesarrollador.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ3JlYXJEZXNhcnJvbGxhZG9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Admin/DeleteAgente.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGVsZXRlQWdlbnRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Admin/Desarrolladores.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGVzYXJyb2xsYWRvcmVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Admin/EditarAdministrador.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdGFyQWRtaW5pc3RyYWRvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Admin/EditarDesarrollador.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWRpdGFyRGVzYXJyb2xsYWRvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Admin/EliminarAgente.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRWxpbWluYXJBZ2VudGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Admin/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agentes/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agentes/Propiedades.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlc1xQcm9waWVkYWRlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/CambiarPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXENhbWJpYXJQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/Chat.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXENoYXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/Conversaciones.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXENvbnZlcnNhY2lvbmVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/ConversacionesGeneral.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXENvbnZlcnNhY2lvbmVzR2VuZXJhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/CrearPropiedad.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXENyZWFyUHJvcGllZGFkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/EditarPropiedad.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXEVkaXRhclByb3BpZWRhZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/EliminarPropiedad.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXEVsaW1pbmFyUHJvcGllZGFkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/MantenimientoPropiedades.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXE1hbnRlbmltaWVudG9Qcm9waWVkYWRlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/MiPerfil.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXE1pUGVyZmlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/MisPropiedades.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXE1pc1Byb3BpZWRhZGVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/Notificaciones.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXE5vdGlmaWNhY2lvbmVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/Ofertas.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXE9mZXJ0YXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/OfertasCliente.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXE9mZXJ0YXNDbGllbnRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Agente/OfertasGeneral.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWdlbnRlXE9mZXJ0YXNHZW5lcmFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Cliente/Chat.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxDaGF0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Cliente/MisOfertas.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxNaXNPZmVydGFzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Cliente/MisPropiedades.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxNaXNQcm9waWVkYWRlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Cliente/PropiedadesAdquiridas.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxQcm9waWVkYWRlc0FkcXVpcmlkYXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Home/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Mejoras/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVqb3Jhc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Mejoras/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVqb3Jhc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Mejoras/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVqb3Jhc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Mejoras/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVqb3Jhc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Shared/_AdminLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Shared/_OfertaModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9PZmVydGFNb2RhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/TipoPropiedades/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb1Byb3BpZWRhZGVzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/TipoPropiedades/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb1Byb3BpZWRhZGVzXERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/TipoPropiedades/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb1Byb3BpZWRhZGVzXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/TipoPropiedades/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb1Byb3BpZWRhZGVzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/TipoPropiedades/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb1Byb3BpZWRhZGVzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/TipoVentas/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb1ZlbnRhc1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/TipoVentas/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb1ZlbnRhc1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/TipoVentas/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb1ZlbnRhc1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/TipoVentas/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGlwb1ZlbnRhc1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/A_M_B/source/repos/AdonisMBuret/Proyecto-Practico-RealEstateApp/RealEstateApp/RealEstateApp.WebApp/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-mmrfemua8c

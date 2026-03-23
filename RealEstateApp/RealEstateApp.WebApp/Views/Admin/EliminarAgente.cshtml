@@ -1,0 +1,237 @@
+@model EliminarAgenteViewModel
+@{
+    ViewData["Title"] = "Eliminar Agente";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <div class="mb-4">
+                <h1 class="display-6 text-danger">
+                    <i class="bi bi-exclamation-triangle"></i> Eliminar Agente
+                </h1>
+                <p class="text-muted">Confirme la eliminación del agente y todas sus propiedades</p>
+            </div>
+
+            
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-x"></i> ¿Está seguro que desea eliminar este agente y todas sus propiedades?
+                    </h5>
+                </div>
+                <div class="card-body">
+               
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <strong>Agente:</strong>
+                        </div>
+                        <div class="col-md-9">
+                            <span class="text-primary fw-bold">@Model.NombreCompleto</span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <strong>Email:</strong>
+                        </div>
+                        <div class="col-md-9">
+                            <i class="bi bi-envelope"></i> @Model.Email
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <strong>Propiedades:</strong>
+                        </div>
+                        <div class="col-md-9">
+                            @if (Model.CantidadPropiedades > 0)
+                            {
+                                <span class="badge bg-warning text-dark fs-6">
+                                    <i class="bi bi-house-fill"></i> @Model.CantidadPropiedades propiedades
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success fs-6">
+                                    <i class="bi bi-check-circle"></i> Sin propiedades
+                                </span>
+                            }
+                        </div>
+                    </div>
+
+                    
+                    @if (Model.CantidadPropiedades > 0)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-exclamation-triangle-fill"></i> ¡ADVERTENCIA CRÍTICA!
+                            </h6>
+                            <p class="mb-2">
+                                Este agente tiene <strong>@Model.CantidadPropiedades propiedades asociadas</strong> que serán 
+                                <strong>eliminadas permanentemente</strong> junto con:
+                            </p>
+                            <ul class="mb-0">
+                                <li>Todas las imágenes y archivos relacionados</li>
+                                <li>Conversaciones y mensajes con clientes</li>
+                                <li>Ofertas recibidas en las propiedades</li>
+                                <li>Favoritos de clientes hacia estas propiedades</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="alert alert-warning" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-shield-exclamation"></i> Consideraciones importantes:
+                            </h6>
+                            <ul class="mb-0">
+                                <li><strong>Impacto en clientes:</strong> Los clientes perderán acceso a estas propiedades</li>
+                                <li><strong>SEO y enlaces:</strong> Las URLs de las propiedades dejarán de funcionar</li>
+                                <li><strong>Historial:</strong> Se perderá todo el historial de actividad</li>
+                                <li><strong>Reversibilidad:</strong> Esta acción NO se puede deshacer</li>
+                            </ul>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-info-circle"></i> Eliminación segura
+                            </h6>
+                            <p class="mb-0">
+                                Este agente no tiene propiedades asociadas, por lo que puede eliminarse de forma segura 
+                                sin afectar otros datos del sistema.
+                            </p>
+                        </div>
+                    }
+
+                   
+                    <div class="mt-4 pt-4 border-top">
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Agentes" class="btn btn-secondary btn-lg">
+                                <i class="bi bi-arrow-left"></i> Volver al Listado
+                            </a>
+                            
+                            <form asp-action="EliminarAgente" method="post" class="d-inline">
+                                <input asp-for="Id" type="hidden" />
+                                
+                                @if (Model.CantidadPropiedades > 0)
+                                {
+                                    <button type="button" class="btn btn-danger btn-lg" onclick="confirmarEliminacionCompleta()">
+                                        <i class="bi bi-trash"></i> Sí, Eliminar Todo
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-danger btn-lg" 
+                                            onclick="return confirm('¿Está completamente seguro de eliminar este agente?')">
+                                        <i class="bi bi-trash"></i> Sí, Eliminar Agente
+                                    </button>
+                                }
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           
+            @if (Model.CantidadPropiedades > 0)
+            {
+                <div id="proceso-eliminacion" class="mt-4" style="display: none;">
+                    <div class="card border-warning">
+                        <div class="card-header bg-warning text-dark">
+                            <h6 class="mb-0">
+                                <i class="bi bi-gear"></i> Proceso de Eliminación
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-3">El sistema procederá a eliminar en el siguiente orden:</p>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ol class="list-group list-group-numbered list-group-flush">
+                                        <li class="list-group-item">Ofertas en propiedades</li>
+                                        <li class="list-group-item">Mensajes y conversaciones</li>
+                                        <li class="list-group-item">Favoritos de clientes</li>
+                                    </ol>
+                                </div>
+                                <div class="col-md-6">
+                                    <ol class="list-group list-group-numbered list-group-flush" start="4">
+                                        <li class="list-group-item">Imágenes de propiedades</li>
+                                        <li class="list-group-item">Propiedades (@Model.CantidadPropiedades)</li>
+                                        <li class="list-group-item">Cuenta del agente</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <form asp-action="EliminarAgente" method="post" id="form-eliminar">
+                                    <input asp-for="Id" type="hidden" />
+                                    <button type="submit" class="btn btn-danger btn-lg">
+                                        <i class="bi bi-exclamation-triangle"></i> Proceder con la Eliminación
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .border-danger {
+            border-color: #dc3545 !important;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+        }
+        
+        .list-group-numbered .list-group-item {
+            border: none;
+            padding: 0.5rem 0;
+        }
+    </style>
+
+    <script>
+        function confirmarEliminacionCompleta() {
+            const mensaje = `ADVERTENCIA: Esta acción eliminará permanentemente:
+            
+• El agente: @Model.NombreCompleto
+• @Model.CantidadPropiedades propiedades
+• Todas las conversaciones y ofertas
+• Imágenes y archivos relacionados
+
+Esta operación NO SE PUEDE DESHACER.
+
+¿Está COMPLETAMENTE SEGURO de continuar?`;
+
+            if (confirm(mensaje)) {
+            
+                $('#proceso-eliminacion').slideDown();
+                $('html, body').animate({
+                    scrollTop: $('#proceso-eliminacion').offset().top - 50
+                }, 1000);
+            }
+        }
+        
+        $(document).ready(function() {
+            
+            $('.btn-secondary').focus();
+            
+            
+            $('#form-eliminar').on('submit', function(e) {
+                if (!confirm('ÚLTIMA CONFIRMACIÓN: ¿Proceder con la eliminación definitiva?')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}

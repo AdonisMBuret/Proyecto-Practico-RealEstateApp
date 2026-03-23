@@ -1,0 +1,496 @@
+@model List<MensajeViewModel>
+@{
+    ViewData["Title"] = "Chat con Cliente";
+    var propiedadId = ViewBag.PropiedadId as int?;
+    var clienteId = ViewBag.ClienteId as string;
+    var clienteNombre = ViewBag.ClienteNombre as string;
+    var agenteId = ViewBag.AgenteId as string;
+}
+
+<div class="container-fluid">
+ 
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index">
+                    <i class="bi bi-house-door"></i> Home
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="Conversaciones" asp-route-propiedadId="@propiedadId">Conversaciones</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Chat con @clienteNombre</li>
+        </ol>
+    </nav>
+
+   
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <h5 class="mb-0">
+                                <i class="bi bi-chat-left-text"></i>
+                                Chat con @clienteNombre
+                            </h5>
+                            <small class="opacity-75">
+                                <i class="bi bi-house"></i> Propiedad ID: @propiedadId
+                            </small>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a asp-action="Conversaciones" asp-route-propiedadId="@propiedadId" 
+                                   class="btn btn-light btn-sm">
+                                    <i class="bi bi-arrow-left"></i> Volver
+                                </a>
+                                <button type="button" class="btn btn-light btn-sm" id="btn-refresh">
+                                    <i class="bi bi-arrow-clockwise"></i> Actualizar
+                                </button>
+                                <a asp-controller="Home" asp-action="Details" asp-route-id="@propiedadId" 
+                                   class="btn btn-light btn-sm">
+                                    <i class="bi bi-eye"></i> Ver Propiedad
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+      
+        <div class="col-lg-8">
+            <div class="card shadow">
+             
+                <div class="card-body p-0">
+                    <div class="chat-container" id="chat-container">
+                        @if (Model.Any())
+                        {
+                            @foreach (var mensaje in Model.OrderBy(m => m.FechaEnvio))
+                            {
+                                <div class="message-wrapper @(mensaje.EsMio ? "message-sent" : "message-received")" 
+                                     data-message-id="@mensaje.Id">
+                                    <div class="message-bubble">
+                                      
+                                        <div class="message-header">
+                                            <span class="sender-name">
+                                                @if (mensaje.EsMio)
+                                                {
+                                                    <i class="bi bi-person-badge text-primary"></i>
+                                                    <span>Tú (Agente)</span>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-person-circle text-success"></i>
+                                                    <span>@mensaje.EmisorNombre</span>
+                                                }
+                                            </span>
+                                            <span class="message-time">
+                                                @mensaje.FechaEnvio.ToString("dd/MM HH:mm")
+                                            </span>
+                                        </div>
+                                        
+                                      
+                                        <div class="message-content">
+                                            @mensaje.Contenido
+                                        </div>
+                                        
+                                       
+                                        <div class="message-status">
+                                            @if (mensaje.EsLeido)
+                                            {
+                                                <i class="bi bi-check2-all text-primary" title="Leído"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="bi bi-check2 text-muted" title="Enviado"></i>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div class="empty-chat">
+                                <div class="text-center py-5">
+                                    <i class="bi bi-chat-heart display-4 text-muted"></i>
+                                    <h5 class="text-muted mt-3">Inicia la conversación</h5>
+                                    <p class="text-muted">Envía el primer mensaje a @clienteNombre</p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+               
+                <div class="card-footer bg-light">
+                    <form asp-action="ResponderMensaje" method="post" id="chat-form" class="needs-validation" novalidate>
+                        <input type="hidden" name="propiedadId" value="@propiedadId" />
+                        <input type="hidden" name="clienteId" value="@clienteId" />
+                        
+                        <div class="input-group">
+                            <textarea name="mensaje" 
+                                      id="mensaje-input" 
+                                      class="form-control" 
+                                      placeholder="Escribe tu mensaje a @clienteNombre..." 
+                                      rows="2" 
+                                      required
+                                      maxlength="1000"></textarea>
+                            <button type="submit" class="btn btn-primary" id="send-button">
+                                <i class="bi bi-send"></i>
+                                <span class="d-none d-md-inline">Enviar</span>
+                            </button>
+                        </div>
+                        <div class="form-text mt-2">
+                            <small class="text-muted">
+                                <span id="char-counter">0</span>/1000 caracteres
+                                • Presiona Ctrl+Enter para enviar rápido
+                            </small>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+       
+        <div class="col-lg-4">
+              <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="bi bi-person-vcard"></i> Información del Cliente
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <div class="bg-success rounded-circle d-inline-flex align-items-center justify-content-center" 
+                             style="width: 60px; height: 60px;">
+                            <i class="bi bi-person fs-4 text-white"></i>
+                        </div>
+                        <h6 class="mt-2 mb-0">@clienteNombre</h6>
+                        <small class="text-muted">Cliente Interesado</small>
+                    </div>
+                    
+                    <div class="border-top pt-3">
+                        <div class="row text-center">
+                            <div class="col-6">
+                                <div class="fw-bold text-primary">@Model.Count</div>
+                                <small class="text-muted">Mensajes</small>
+                            </div>
+                            <div class="col-6">
+                                <div class="fw-bold text-success">@Model.Count(m => !m.EsMio)</div>
+                                <small class="text-muted">Del Cliente</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="card shadow mb-4">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="bi bi-graph-up"></i> Estadísticas del Chat
+                    </h6>
+                </div>
+                <div class="card-body">
+                    @if (Model.Any())
+                    {
+                        <div class="mb-3">
+                            <small class="text-muted">Primera conversación:</small>
+                            <div class="fw-bold">@Model.Min(m => m.FechaEnvio).ToString("dd/MM/yyyy")</div>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted">Último mensaje:</small>
+                            <div class="fw-bold">@Model.Max(m => m.FechaEnvio).ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                        <div class="mb-3">
+                            <small class="text-muted">Mensajes no leídos:</small>
+                            <div class="fw-bold text-warning">@Model.Count(m => !m.EsLeido && !m.EsMio)</div>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted text-center">Sin actividad aún</p>
+                    }
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0">
+                        <i class="bi bi-lightning"></i> Acciones Rápidas
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <button type="button" class="btn btn-outline-primary btn-sm plantilla-btn" 
+                                data-mensaje="¡Hola! Gracias por tu interés en esta propiedad. ¿En qué puedo ayudarte?">
+                            <i class="bi bi-chat-quote"></i> Saludo inicial
+                        </button>
+                        <button type="button" class="btn btn-outline-success btn-sm plantilla-btn" 
+                                data-mensaje="¿Te gustaría agendar una visita para ver la propiedad en persona?">
+                            <i class="bi bi-calendar-check"></i> Agendar visita
+                        </button>
+                        <button type="button" class="btn btn-outline-info btn-sm plantilla-btn" 
+                                data-mensaje="Si tienes alguna pregunta específica sobre la propiedad, estaré encantado de responderte.">
+                            <i class="bi bi-question-circle"></i> Ofrecer ayuda
+                        </button>
+                        <a asp-action="Ofertas" asp-route-propiedadId="@propiedadId" 
+                           class="btn btn-outline-warning btn-sm">
+                            <i class="bi bi-currency-dollar"></i> Ver Ofertas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .chat-container {
+            height: 500px;
+            overflow-y: auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+        
+        .message-wrapper {
+            margin-bottom: 20px;
+            display: flex;
+        }
+        
+        .message-sent {
+            justify-content: flex-end;
+        }
+        
+        .message-received {
+            justify-content: flex-start;
+        }
+        
+        .message-bubble {
+            max-width: 70%;
+            min-width: 200px;
+            padding: 12px 16px;
+            border-radius: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            animation: messageSlide 0.3s ease;
+        }
+        
+        .message-sent .message-bubble {
+            background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message-received .message-bubble {
+            background: white;
+            color: #333;
+            border: 1px solid #e9ecef;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+        }
+        
+        .message-sent .message-header {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .message-received .message-header {
+            color: #6c757d;
+        }
+        
+        .message-content {
+            line-height: 1.4;
+            word-wrap: break-word;
+            font-size: 0.95rem;
+        }
+        
+        .message-status {
+            text-align: right;
+            margin-top: 5px;
+            font-size: 0.75rem;
+        }
+        
+        .message-sent .message-status {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        @@keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .empty-chat {
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #mensaje-input {
+            border-radius: 25px;
+            border: 2px solid #e9ecef;
+            padding: 12px 20px;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+        
+        #mensaje-input:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+        
+        #send-button {
+            border-radius: 25px;
+            padding: 12px 20px;
+            margin-left: 10px;
+        }
+        
+        .plantilla-btn:hover {
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+        
+        .chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb {
+            background: #0d6efd;
+            border-radius: 10px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background: #0056b3;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            const chatContainer = $('#chat-container');
+            const mensajeInput = $('#mensaje-input');
+            const charCounter = $('#char-counter');
+            const sendButton = $('#send-button');
+            
+           
+            function scrollToBottom() {
+                chatContainer.scrollTop(chatContainer[0].scrollHeight);
+            }
+            
+           
+            scrollToBottom();
+            
+         
+            mensajeInput.on('input', function() {
+                const length = $(this).val().length;
+                charCounter.text(length);
+                
+              
+                if (length > 800) {
+                    charCounter.addClass('text-danger');
+                } else if (length > 600) {
+                    charCounter.addClass('text-warning').removeClass('text-danger');
+                } else {
+                    charCounter.removeClass('text-warning text-danger');
+                }
+            });
+            
+            
+            mensajeInput.on('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'Enter') {
+                    e.preventDefault();
+                    $('#chat-form').submit();
+                }
+            });
+            
+           
+            mensajeInput.on('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 100) + 'px';
+            });
+            
+         
+            $('.plantilla-btn').on('click', function() {
+                const mensaje = $(this).data('mensaje');
+                mensajeInput.val(mensaje);
+                mensajeInput.trigger('input'); 
+                mensajeInput.focus();
+            });
+            
+         
+            $('#chat-form').on('submit', function(e) {
+                const mensaje = mensajeInput.val().trim();
+                
+                if (!mensaje) {
+                    e.preventDefault();
+                    alert('Por favor escribe un mensaje');
+                    mensajeInput.focus();
+                    return;
+                }
+                
+                if (mensaje.length > 1000) {
+                    e.preventDefault();
+                    alert('El mensaje es muy largo. Máximo 1000 caracteres.');
+                    return;
+                }
+                
+               
+                sendButton.prop('disabled', true);
+                sendButton.html('<i class="bi bi-hourglass-split"></i> Enviando...');
+            });
+            
+           
+            $('#btn-refresh').on('click', function() {
+                $(this).find('i').addClass('fa-spin');
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            });
+            
+            
+            setTimeout(() => {
+                $('.message-received .message-status i').removeClass('bi-check2').addClass('bi-check2-all text-primary');
+            }, 2000);
+            
+           
+            let isTyping = false;
+            mensajeInput.on('input', function() {
+                if (!isTyping && $(this).val().length > 0) {
+                    isTyping = true;
+                    
+                    
+                    setTimeout(() => {
+                        isTyping = false;
+                    }, 3000);
+                }
+            });
+            
+            
+            mensajeInput.focus();
+        });
+    </script>
+
+    @Html.AntiForgeryToken()
+}

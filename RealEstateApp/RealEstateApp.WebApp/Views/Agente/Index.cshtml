@@ -1,0 +1,354 @@
+@model AgenteDashboardViewModel
+@{
+    ViewData["Title"] = "Home del Agente";
+}
+
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    
+                    <div class="me-4">
+                        @if (!string.IsNullOrEmpty(Model.Agente.Foto))
+                        {
+                            <img src="~/@Model.Agente.Foto" 
+                                 class="rounded-circle border border-primary" 
+                                 alt="Foto de @Model.Agente.Nombre" 
+                                 style="width: 80px; height: 80px; object-fit: cover;">
+                        }
+                        else
+                        {
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center border" 
+                                 style="width: 80px; height: 80px;">
+                                <i class="bi bi-person fs-2 text-white"></i>
+                            </div>
+                        }
+                    </div>
+                    
+                    <div>
+                        <h1 class="display-5 mb-1">
+                            <i class="bi bi-house-door text-primary"></i> 
+                            Bienvenido, @Model.Agente.Nombre
+                        </h1>
+                        <p class="lead text-muted mb-0">Panel de control de tus propiedades</p>
+                    </div>
+                </div>
+                <div class="text-end">
+                    <span class="badge bg-primary fs-6">Agente Inmobiliario</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center bg-primary text-white">
+                <div class="card-body">
+                    <i class="bi bi-house-door-fill display-4"></i>
+                    <h4 class="mt-2">@Model.TotalPropiedades</h4>
+                    <p class="mb-0">Total Propiedades</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center bg-success text-white">
+                <div class="card-body">
+                    <i class="bi bi-check-circle-fill display-4"></i>
+                    <h4 class="mt-2">@Model.PropiedadesDisponibles</h4>
+                    <p class="mb-0">Disponibles</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center bg-warning text-white">
+                <div class="card-body">
+                    <i class="bi bi-currency-dollar display-4"></i>
+                    <h4 class="mt-2">@Model.PropiedadesVendidas</h4>
+                    <p class="mb-0">Vendidas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center bg-info text-white">
+                <div class="card-body">
+                    <i class="bi bi-cash-stack display-4"></i>
+                    <h4 class="mt-2">
+                        @if (Model.TotalGanancias > 0)
+                        {
+                            <small>@Model.TotalGanancias.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))</small>
+                        }
+                        else
+                        {
+                            <span>RD$0</span>
+                        }
+                    </h4>
+                    <p class="mb-0">Ganancias Totales</p>
+                    @if (Model.OfertasAceptadas.Any())
+                    {
+                        <small class="opacity-75">
+                            @Model.OfertasAceptadas.Count oferta(s) aceptada(s)
+                        </small>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-lightning-fill"></i> Acciones Rápidas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="d-grid">
+                                <a asp-action="CrearPropiedad" class="btn btn-success btn-lg">
+                                    <i class="bi bi-plus-circle"></i> Nueva Propiedad
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-grid">
+                                <a asp-action="MantenimientoPropiedades" class="btn btn-primary btn-lg">
+                                    <i class="bi bi-gear"></i> Mantenimiento
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-grid">
+                                <a asp-action="MiPerfil" class="btn btn-outline-primary btn-lg">
+                                    <i class="bi bi-person-circle"></i> Mi Perfil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="bi bi-house-fill"></i> 
+                        Todas Mis Propiedades 
+                        <span class="badge bg-secondary ms-2">@Model.Propiedades.Count</span>
+                    </h5>
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" class="btn btn-outline-primary active" id="btn-todas">
+                            Todas (@Model.TotalPropiedades)
+                        </button>
+                        <button type="button" class="btn btn-outline-success" id="btn-disponibles">
+                            Disponibles (@Model.PropiedadesDisponibles)
+                        </button>
+                        <button type="button" class="btn btn-outline-warning" id="btn-vendidas">
+                            Vendidas (@Model.PropiedadesVendidas)
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if (Model.Propiedades.Any())
+                    {
+                        <div class="row" id="propiedades-container">
+                            @foreach (var propiedad in Model.Propiedades)
+                            {
+                                <div class="col-md-4 mb-4 propiedad-card" 
+                                     data-estado="@propiedad.EstadoTexto.ToLower()">
+                                    <div class="card h-100 shadow-sm hover-shadow @(propiedad.EstadoTexto == "Vendida" ? "border-warning" : "")">
+                                        
+                                        <div class="position-relative">
+                                            @if (!string.IsNullOrEmpty(propiedad.ImagenPrincipal))
+                                            {
+                                                <img src="~/@propiedad.ImagenPrincipal" class="card-img-top" alt="@propiedad.TipoPropiedad" style="height: 200px; object-fit: cover;">
+                                            }
+                                            else
+                                            {
+                                                <img src="~/images/no-image.png" class="card-img-top" alt="Sin imagen" style="height: 200px; object-fit: cover;">
+                                            }
+                                            
+                                            
+                                            @if (propiedad.EstadoTexto == "Vendida")
+                                            {
+                                                <span class="badge bg-warning text-dark position-absolute top-0 start-0 m-2 fs-6">
+                                                    <i class="bi bi-check-circle-fill"></i> VENDIDA
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-success position-absolute top-0 start-0 m-2">
+                                                    <i class="bi bi-eye-fill"></i> Disponible
+                                                </span>
+                                            }
+                                            
+                                            
+                                            <span class="badge bg-primary position-absolute top-0 end-0 m-2">@propiedad.TipoVenta</span>
+                                        </div>
+
+                                        <div class="card-body">
+                                            
+                                            <h6 class="text-muted mb-2">@propiedad.TipoPropiedad</h6>
+                                            
+                                            
+                                            <h5 class="card-title">Código: @propiedad.Codigo</h5>
+                                            
+                                            
+                                            <h4 class="text-primary fw-bold">
+                                                @propiedad.Precio.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                                            </h4>
+                                            
+                                            
+                                            @if (!string.IsNullOrEmpty(propiedad.Descripcion))
+                                            {
+                                                <p class="text-muted small mb-3">
+                                                    @(propiedad.Descripcion.Length > 60 ? propiedad.Descripcion.Substring(0, 60) + "..." : propiedad.Descripcion)
+                                                </p>
+                                            }
+                                            
+                                            
+                                            <div class="d-flex justify-content-between mt-3 mb-3">
+                                                <span title="Habitaciones">
+                                                    <i class="bi bi-door-open text-primary"></i> @propiedad.CantidadHabitaciones
+                                                </span>
+                                                <span title="Baños">
+                                                    <i class="bi bi-droplet text-info"></i> @propiedad.CantidadBanos
+                                                </span>
+                                                <span title="Tamaño">
+                                                    <i class="bi bi-rulers text-success"></i> @propiedad.TamanoEnMetros m²
+                                                </span>
+                                            </div>
+
+                                            
+                                            <small class="text-muted">
+                                                <i class="bi bi-calendar"></i> 
+                                                Creada: @propiedad.FechaCreacion.ToString("dd/MM/yyyy")
+                                            </small>
+                                        </div>
+
+                                        
+                                        <div class="card-footer">
+                                            <div class="btn-group w-100" role="group">
+                                                
+                                                <a asp-controller="Home" asp-action="Details" asp-route-id="@propiedad.Id" 
+                                                   class="btn btn-outline-primary btn-sm">
+                                                    <i class="bi bi-eye"></i> Ver
+                                                </a>
+
+                                                @if (propiedad.EstadoTexto == "Disponible")
+                                                {
+                                                    
+                                                    <a asp-action="EditarPropiedad" asp-route-id="@propiedad.Id" 
+                                                       class="btn btn-outline-warning btn-sm">
+                                                        <i class="bi bi-pencil"></i> Editar
+                                                    </a>
+                                                    
+                                                    
+                                                    <a asp-action="EliminarPropiedad" asp-route-id="@propiedad.Id" 
+                                                       class="btn btn-outline-danger btn-sm">
+                                                        <i class="bi bi-trash"></i> Eliminar
+                                                    </a>
+                                                }
+
+                                                
+                                                <div class="btn-group" role="group">
+                                                    <button type="button" class="btn btn-outline-info btn-sm dropdown-toggle" data-bs-toggle="dropdown">
+                                                        <i class="bi bi-chat-dots"></i>
+                                                    </button>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <a class="dropdown-item" asp-action="Ofertas" asp-route-propiedadId="@propiedad.Id">
+                                                                <i class="bi bi-currency-dollar"></i> Ver Ofertas
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" asp-action="Conversaciones" asp-route-propiedadId="@propiedad.Id">
+                                                                <i class="bi bi-chat-text"></i> Ver Chats
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-house display-1 text-muted mb-4"></i>
+                            <h3 class="text-muted">No tienes propiedades registradas</h3>
+                            <p class="lead text-muted mb-4">
+                                Comienza creando tu primera propiedad para ofrecer a los clientes
+                            </p>
+                            <a asp-action="CrearPropiedad" class="btn btn-success btn-lg">
+                                <i class="bi bi-plus-circle"></i> Crear Mi Primera Propiedad
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .hover-shadow {
+            transition: all 0.3s ease;
+        }
+        .hover-shadow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+        
+        .propiedad-card {
+            transition: opacity 0.3s ease;
+        }
+        
+        .propiedad-card.d-none {
+            display: none !important;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            $('#btn-todas, #btn-disponibles, #btn-vendidas').on('click', function() {
+                $('.btn-group .btn').removeClass('active');
+                $(this).addClass('active');
+                
+                const filtro = $(this).attr('id').replace('btn-', '');
+                
+            
+                $('.propiedad-card').each(function() {
+                    const estado = $(this).data('estado');
+                    
+                    if (filtro === 'todas') {
+                        $(this).removeClass('d-none');
+                    } else if (filtro === 'disponibles') {
+                        $(this).toggleClass('d-none', estado !== 'disponible');
+                    } else if (filtro === 'vendidas') {
+                        $(this).toggleClass('d-none', estado !== 'vendida');
+                    }
+                });
+                
+                $('.propiedad-card:not(.d-none)').hide().fadeIn(300);
+            });
+            
+            $('a[href*="EliminarPropiedad"]').on('click', function(e) {
+                const confirmacion = confirm('¿Está seguro que desea eliminar esta propiedad?');
+                if (!confirmacion) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}

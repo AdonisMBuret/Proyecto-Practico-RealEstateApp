@@ -1,0 +1,15 @@
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\bin\Debug\net9.0\RealEstateApp.Application.deps.json
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\bin\Debug\net9.0\RealEstateApp.Application.dll
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\bin\Debug\net9.0\RealEstateApp.Application.pdb
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\bin\Debug\net9.0\RealEstateApp.Domain.dll
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\bin\Debug\net9.0\RealEstateApp.Domain.pdb
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\obj\Debug\net9.0\RealEstateApp.Application.csproj.AssemblyReference.cache
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\obj\Debug\net9.0\RealEstateApp.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\obj\Debug\net9.0\RealEstateApp.Application.AssemblyInfoInputs.cache
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\obj\Debug\net9.0\RealEstateApp.Application.AssemblyInfo.cs
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\obj\Debug\net9.0\RealEstateApp.Application.csproj.CoreCompileInputs.cache
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\obj\Debug\net9.0\RealEsta.5DECC000.Up2Date
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\obj\Debug\net9.0\RealEstateApp.Application.dll
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\obj\Debug\net9.0\refint\RealEstateApp.Application.dll
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\obj\Debug\net9.0\RealEstateApp.Application.pdb
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Application\obj\Debug\net9.0\ref\RealEstateApp.Application.dll

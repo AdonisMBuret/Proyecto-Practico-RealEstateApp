@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Exceptions\**" />
+    <Compile Remove="Feactures\**" />
+    <Compile Remove="Helpers\**" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Exceptions\**" />
+    <EmbeddedResource Remove="Feactures\**" />
+    <EmbeddedResource Remove="Helpers\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Exceptions\**" />
+    <None Remove="Feactures\**" />
+    <None Remove="Helpers\**" />
+    <None Remove="Services\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="Services\AgenteService.cs" />
+    <Compile Include="Services\ChatService.cs" />
+    <Compile Include="Services\FavoritoService.cs" />
+    <Compile Include="Services\MejoraService.cs" />
+    <Compile Include="Services\NotificacionService.cs" />
+    <Compile Include="Services\OfertaService.cs" />
+    <Compile Include="Services\PropiedadService.cs" />
+    <Compile Include="Services\TipoPropiedadService.cs" />
+    <Compile Include="Services\TipoVentaService.cs" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <Folder Include="Features\Favoritos\Commands\RemovePropiedadFavorita\" />
+    <Folder Include="Features\Propiedades\Queries\GetPropertyById\" />
+    <Folder Include="Features\Propiedades\Queries\GetPropertyByCode\" />
+    <Folder Include="Features\Propiedades\Queries\GetAllProperties\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RealEstateApp.Domain\RealEstateApp.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="FluentValidation" Version="12.1.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.0" />
+    <PackageReference Include="MediatR" Version="13.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+  </ItemGroup>
+
+</Project>

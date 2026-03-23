@@ -1,0 +1,6 @@
+{
+  "RealEstateApp.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\A_M_B\\Downloads\\-RealEstateApp-Dev2\\RealEstateApp.Application",
+  "RealEstateApp.Domain, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\A_M_B\\Downloads\\-RealEstateApp-Dev2\\RealEstateApp.Domain",
+  "RealEstateApp.Identity, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\A_M_B\\Downloads\\-RealEstateApp-Dev2\\RealEstateApp.Identity",
+  "RealEstateApp.Persistence, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "C:\\Users\\A_M_B\\Downloads\\-RealEstateApp-Dev2\\RealEstateApp.Persistence"
+}

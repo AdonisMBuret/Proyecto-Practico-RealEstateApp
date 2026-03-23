@@ -1,0 +1,53 @@
+
+<div class="modal fade" id="ofertaModal" tabindex="-1" aria-labelledby="ofertaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="ofertaModalLabel">
+                    <i class="bi bi-cash-coin"></i> Hacer una Oferta
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Cliente" asp-action="EnviarOferta" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="propiedadId" value="@Model.Propiedad.Id" />
+                    
+                    <div class="alert alert-info">
+                        <strong>Precio de la propiedad:</strong> @Model.Propiedad.Precio.ToString("C0") DOP
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="montoOferta" class="form-label">Monto de tu oferta (DOP)</label>
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">
+                                <i class="bi bi-currency-dollar"></i>
+                            </span>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="montoOferta" 
+                                   name="monto" 
+                                   min="1" 
+                                   step="0.01" 
+                                   required 
+                                   placeholder="Ingresa tu oferta">
+                        </div>
+                        <div class="form-text">El monto debe ser en pesos dominicanos (DOP)</div>
+                    </div>
+
+                    <div class="alert alert-warning">
+                        <i class="bi bi-info-circle"></i> 
+                        <strong>Importante:</strong> Solo puedes tener una oferta pendiente a la vez para esta propiedad.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-send"></i> Enviar Oferta
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

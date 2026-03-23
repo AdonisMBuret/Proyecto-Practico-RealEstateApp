@@ -1,0 +1,762 @@
+@model DetallePropiedadViewModel
+@{
+    ViewData["Title"] = $"Detalle - {Model.Propiedad.Codigo}";
+}
+
+<div class="container">
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index">Propiedades</a>
+            </li>
+            @if (User.IsInRole("Cliente"))
+            {
+                <li class="breadcrumb-item">
+                    <a asp-action="MisFavoritos">Mis Favoritos</a>
+                </li>
+            }
+            <li class="breadcrumb-item active" aria-current="page">@Model.Propiedad.Codigo</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        
+        <div class="col-lg-8">
+            <div id="propiedadCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @if (Model.Propiedad.Imagenes.Any())
+                    {
+                        @for (int i = 0; i < Model.Propiedad.Imagenes.Count; i++)
+                        {
+                            <div class="carousel-item @(i == 0 ? "active" : "")">
+                                <img src="@GetImageUrl(Model.Propiedad.Imagenes[i])" 
+                                     class="d-block w-100 property-image" 
+                                     alt="Imagen @(i + 1) de @Model.Propiedad.Codigo"
+                                     style="height: 400px; object-fit: cover;"
+                                     onerror="this.src='/images/no-image.svg'; this.onerror=null;">
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="carousel-item active">
+                            <img src="/images/no-image.svg" 
+                                 class="d-block w-100" 
+                                 alt="Sin imagen disponible"
+                                 style="height: 400px; object-fit: cover;">
+                        </div>
+                    }
+                </div>
+                
+                @if (Model.Propiedad.Imagenes.Count > 1)
+                {
+                    <button class="carousel-control-prev" type="button" data-bs-target="#propiedadCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Anterior</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#propiedadCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Siguiente</span>
+                    </button>
+                }
+            </div>
+
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2 class="card-title">@Model.Propiedad.TipoPropiedad</h2>
+                            <h5 class="text-muted mb-3">Código: @Model.Propiedad.Codigo</h5>
+                            <h3 class="text-primary fw-bold">
+                                @Model.Propiedad.Precio.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                            </h3>
+                            <span class="badge bg-info fs-6">@Model.Propiedad.TipoVenta</span>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            @if (User.IsInRole("Cliente"))
+                            {
+                                <button class="btn @(Model.EsFavorita ? "btn-danger" : "btn-outline-danger") favorito-btn" 
+                                        data-propiedad-id="@Model.Propiedad.Id"
+                                        data-es-favorito="@Model.EsFavorita.ToString().ToLower()">
+                                    <i class="bi bi-heart@(Model.EsFavorita ? "-fill" : "")" id="iconFavorito"></i>
+                                    <span id="textFavorito">@(Model.EsFavorita ? "Quitar de Favoritos" : "Agregar a Favoritos")</span>
+                                </button>
+                            }
+                        </div>
+                    </div>
+
+                    
+                    <div class="row mt-4">
+                        <div class="col-md-3 text-center">
+                            <div class="border p-3 rounded">
+                                <i class="bi bi-door-open fs-2 text-primary"></i>
+                                <h5 class="mt-2">@Model.Propiedad.CantidadHabitaciones</h5>
+                                <small class="text-muted">Habitaciones</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="border p-3 rounded">
+                                <i class="bi bi-droplet fs-2 text-primary"></i>
+                                <h5 class="mt-2">@Model.Propiedad.CantidadBanos</h5>
+                                <small class="text-muted">Baños</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="border p-3 rounded">
+                                <i class="bi bi-rulers fs-2 text-primary"></i>
+                                <h5 class="mt-2">@Model.Propiedad.TamanoEnMetros</h5>
+                                <small class="text-muted">m² de construcción</small>
+                            </div>
+                        </div>
+                        <div class="col-md-3 text-center">
+                            <div class="border p-3 rounded">
+                                <i class="bi bi-calendar fs-2 text-primary"></i>
+                                <h5 class="mt-2">@(Model.Propiedad.EsReciente ? "Nueva" : "Establecida")</h5>
+                                <small class="text-muted">Estado</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="mt-4">
+                        <h5>Descripción</h5>
+                        <p class="text-justify">@Model.Propiedad.Descripcion</p>
+                    </div>
+
+                    
+                    @if (Model.Propiedad.Mejoras.Any())
+                    {
+                        <div class="mt-4">
+                            <h5><i class="bi bi-stars"></i> Mejoras</h5>
+                            <div class="row">
+                                @foreach (var mejora in Model.Propiedad.Mejoras)
+                                {
+                                    <div class="col-md-4 mb-2">
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check"></i> @mejora
+                                        </span>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            
+            @if (User.IsInRole("Cliente"))
+            {
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="bi bi-currency-dollar"></i> Mis Ofertas para esta Propiedad
+                        </h5>
+                        @{
+                            var puedeHacerOferta = !Model.TieneOfertaAceptada && !Model.TieneOfertaPendiente;
+                        }
+                        <button type="button" 
+                                class="btn btn-success" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#ofertaModal"
+                                @(puedeHacerOferta ? "" : "disabled")>
+                            <i class="bi bi-plus-circle"></i> Nueva Oferta
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        @if (Model.Ofertas.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Monto Ofertado</th>
+                                            <th>Estado</th>
+                                            <th>Comentarios</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var oferta in Model.Ofertas)
+                                        {
+                                            <tr>
+                                                <td>@oferta.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</td>
+                                                <td class="fw-bold text-primary">
+                                                    @oferta.MontoOferta.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                                                </td>
+                                                <td>
+                                                    @switch (oferta.EstadoTexto)
+                                                    {
+                                                        case "Pendiente":
+                                                            <span class="badge bg-warning">
+                                                                <i class="bi-clock"></i> Pendiente
+                                                            </span>
+                                                            break;
+                                                        case "Aceptada":
+                                                            <span class="badge bg-success">
+                                                                <i class="bi bi-check-circle"></i> Aceptada
+                                                            </span>
+                                                            break;
+                                                        case "Rechazada":
+                                                            <span class="badge bg-danger">
+                                                                <i class="bi bi-x-circle"></i> Rechazada
+                                                            </span>
+                                                            break;
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (!string.IsNullOrEmpty(oferta.Comentarios))
+                                                    {
+                                                        <small class="text-muted">@oferta.Comentarios</small>
+                                                    }
+                                                    else
+                                                    {
+                                                        <small class="text-muted">Sin comentarios</small>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center py-4">
+                                <i class="bi bi-currency-dollar display-4 text-muted"></i>
+                                <p class="text-muted mt-3">Aún no has realizado ofertas para esta propiedad</p>
+                            </div>
+                        }
+
+                        
+                        @if (!puedeHacerOferta)
+                        {
+                            <div class="alert alert-info mt-3">
+                                @if (Model.TieneOfertaAceptada)
+                                {
+                                    <span class="d-flex align-items-center">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        <div>
+                                            <strong>Oferta Aceptada:</strong> Tienes una oferta aceptada para esta propiedad.
+                                        </div>
+                                    </span>
+                                }
+                                else if (Model.TieneOfertaPendiente)
+                                {
+                                    <span class="d-flex align-items-center">
+                                        <i class="bi bi-clock-history me-2"></i>
+                                        <div>
+                                            <strong>Oferta Pendiente:</strong> Tienes una oferta pendiente de respuesta del agente.
+                                        </div>
+                                    </span>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        
+        <div class="col-lg-4">
+            
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-person-circle"></i> Agente Inmobiliario</h5>
+                </div>
+                <div class="card-body text-center">
+                    @{
+                        var agentePhotoUrl = GetImageUrl(Model.Propiedad.Agente.Foto);
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Propiedad.Agente.Foto))
+                    {
+                        <img src="@agentePhotoUrl" 
+                             class="rounded-circle mb-3 agent-photo" 
+                             alt="@Model.Propiedad.Agente.NombreCompleto"
+                             style="width: 120px; height: 120px; object-fit: cover;"
+                             onerror="this.src='/images/no-image.svg'; this.onerror=null;">
+                    }
+                    else
+                    {
+                        <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center mb-3"
+                             style="width: 120px; height: 120px;">
+                            <i class="bi bi-person fs-1 text-white"></i>
+                        </div>
+                    }
+                    
+                    <h5>@Model.Propiedad.Agente.NombreCompleto</h5>
+                    
+                    <div class="mt-3">
+                        @if (!string.IsNullOrEmpty(Model.Propiedad.Agente.Telefono))
+                        {
+                            <p class="mb-2">
+                                <i class="bi bi-telephone"></i> 
+                                <a href="tel:@Model.Propiedad.Agente.Telefono" class="text-decoration-none">
+                                    @Model.Propiedad.Agente.Telefono
+                                </a>
+                            </p>
+                        }
+                        
+                        @if (!string.IsNullOrEmpty(Model.Propiedad.Agente.Email))
+                        {
+                            <p class="mb-0">
+                                <i class="bi bi-envelope"></i> 
+                                <a href="mailto:@Model.Propiedad.Agente.Email" class="text-decoration-none">
+                                    @Model.Propiedad.Agente.Email
+                                </a>
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="text-muted">
+                                <i class="bi bi-envelope"></i> 
+                                <span>Información de contacto no disponible</span>
+                            </p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            
+            @if (User.IsInRole("Cliente"))
+            {
+                
+                @if (Model.Mensajes.Any())
+                {
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0"><i class="bi bi-chat-text"></i> Conversación con el Agente</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="chat-container" style="max-height: 300px; overflow-y: auto; padding: 15px;">
+                                @foreach (var mensaje in Model.Mensajes.OrderBy(m => m.FechaEnvio))
+                                {
+                                    <div class="message mb-3 @(mensaje.EsMio ? "text-end" : "text-start")">
+                                        <div class="d-inline-block p-2 rounded @(mensaje.EsMio ? "bg-primary text-white" : "bg-light border") position-relative"
+                                             style="max-width: 80%;">
+                                            <small class="d-block fw-bold">
+                                                @if (mensaje.EsMio)
+                                                {
+                                                    <span>Yo</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>@mensaje.EmisorNombre</span>
+                                                }
+                                            </small>
+                                            <div class="message-content">
+                                                @mensaje.Contenido
+                                            </div>
+                                            <small class="d-block @(mensaje.EsMio ? "text-white-50" : "text-muted") mt-1">
+                                                @mensaje.FechaEnvio.ToString("dd/MM/yyyy HH:mm")
+                                            </small>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-chat-dots"></i> 
+                            @(Model.Mensajes.Any() ? "Continuar Conversación" : "Iniciar Conversación")
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form asp-action="EnviarMensaje" method="post">
+                            <input type="hidden" name="propiedadId" value="@Model.Propiedad.Id" />
+                            <div class="mb-3">
+                                <label for="mensaje" class="form-label">Tu mensaje al agente</label>
+                                <textarea class="form-control" 
+                                          name="mensaje" 
+                                          id="mensaje" 
+                                          rows="4" 
+                                          placeholder="Escribe tu mensaje o pregunta sobre la propiedad..."
+                                          required
+                                          maxlength="1000"></textarea>
+                                <div class="form-text">Máximo 1000 caracteres</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-send"></i> Enviar Mensaje
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+            else if (!User.Identity?.IsAuthenticated ?? true)
+            {
+                
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h6><i class="bi bi-info-circle"></i> ¿Interesado en esta propiedad?</h6>
+                        <p class="text-muted">Inicia sesión para:</p>
+                        <ul class="list-unstyled text-muted">
+                            <li><i class="bi bi-check text-success"></i> Contactar al agente</li>
+                            <li><i class="bi bi-check text-success"></i> Hacer ofertas</li>
+                            <li><i class="bi bi-check text-success"></i> Guardar favoritos</li>
+                        </ul>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-primary">
+                            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+@if (User.IsInRole("Cliente"))
+{
+    <div class="modal fade" id="ofertaModal" tabindex="-1" aria-labelledby="ofertaModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form asp-action="HacerOferta" method="post" id="formOferta">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="ofertaModalLabel">
+                            <i class="bi bi-currency-dollar"></i> Hacer Nueva Oferta
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="propiedadId" value="@Model.Propiedad.Id" />
+                        
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Precio de la propiedad:</strong> 
+                            @Model.Propiedad.Precio.ToString("C0", System.Globalization.CultureInfo.CreateSpecificCulture("es-DO"))
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="montoOferta" class="form-label">Tu oferta (DOP) <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text">RD$</span>
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="montoOfertaDisplay" 
+                                       placeholder="Ejemplo: 2,500,000"
+                                       autocomplete="off">
+                                
+                                <input type="hidden" 
+                                       name="montoOferta" 
+                                       id="montoOferta" 
+                                       required>
+                            </div>
+                            <div class="form-text">
+                                Ingresa tu oferta en pesos dominicanos (DOP). Mínimo RD$1,000
+                            </div>
+                            <div class="invalid-feedback" id="montoError" style="display: none;">
+                                El monto debe estar entre RD$1,000 y RD$100,000,000
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="comentarios" class="form-label">Comentarios (Opcional)</label>
+                            <textarea class="form-control" 
+                                      name="comentarios" 
+                                      id="comentarios" 
+                                      rows="3" 
+                                      placeholder="Agrega algún comentario sobre tu oferta..."
+                                      maxlength="500"></textarea>
+                            <div class="form-text">Máximo 500 caracteres</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success" id="btnEnviarOferta">
+                            <i class="bi bi-send"></i> Enviar Oferta
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@functions {
+    private string GetImageUrl(string? imagePath)
+    {
+        if (string.IsNullOrEmpty(imagePath))
+            return "/images/no-image.svg";
+            
+        // Si la ruta ya empieza con /, es absoluta
+        if (imagePath.StartsWith("/"))
+            return imagePath;
+            
+        // Si no empieza con /, agregamos el /
+        return $"/{imagePath.Replace("\\", "/")}";
+    }
+}
+
+@section Scripts {
+    <style>
+        .message {
+            animation: fadeInUp 0.3s ease;
+        }
+        
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .chat-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .chat-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+        
+        .chat-container::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        .favorito-btn {
+            transition: all 0.2s ease;
+        }
+        
+        .favorito-btn:disabled {
+            opacity: 0.6;
+        }
+        
+        .property-image {
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .agent-photo {
+            border: 4px solid #fff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .input-group .form-control:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background-color: #fff5f5;
+        }
+
+        .is-valid {
+            border-color: #198754 !important;
+            background-color: #f0fff4;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            // Auto-scroll al final del chat si existe
+            const chatContainer = $('.chat-container');
+            if (chatContainer.length > 0) {
+                chatContainer.scrollTop(chatContainer[0].scrollHeight);
+            }
+            
+            // ============================================
+            // MANEJO DEL MONTO DE OFERTA CON VALIDACIONES
+            // ============================================
+            const montoDisplay = $('#montoOfertaDisplay');
+            const montoHidden = $('#montoOferta');
+            const montoError = $('#montoError');
+            const btnEnviar = $('#btnEnviarOferta');
+            
+            // Formatear número con separadores de miles dominicanos
+            function formatearMonto(valor) {
+                if (!valor) return '';
+                // Remover caracteres no numéricos
+                const numeroLimpio = valor.replace(/[^\d]/g, '');
+                if (!numeroLimpio) return '';
+                
+                // Formatear con separadores de miles
+                return parseInt(numeroLimpio).toLocaleString('es-DO');
+            }
+            
+            // Validar monto
+            function validarMonto(valor) {
+                const numero = parseInt(valor.replace(/[^\d]/g, ''));
+                return numero >= 1000 && numero <= 100000000;
+            }
+            
+            // Evento input para formatear mientras se escribe
+            montoDisplay.on('input', function() {
+                let valor = $(this).val();
+                const valorFormateado = formatearMonto(valor);
+                const valorNumerico = valor.replace(/[^\d]/g, '');
+                
+                // Actualizar display con formato
+                $(this).val(valorFormateado);
+                
+                // Actualizar campo oculto
+                montoHidden.val(valorNumerico);
+                
+                // Validar en tiempo real
+                if (valorNumerico) {
+                    if (validarMonto(valorFormateado)) {
+                        $(this).removeClass('is-invalid').addClass('is-valid');
+                        montoError.hide();
+                        btnEnviar.prop('disabled', false);
+                    } else {
+                        $(this).removeClass('is-valid').addClass('is-invalid');
+                        montoError.show();
+                        btnEnviar.prop('disabled', true);
+                    }
+                } else {
+                    $(this).removeClass('is-valid is-invalid');
+                    montoError.hide();
+                    btnEnviar.prop('disabled', true);
+                }
+            });
+            
+            // Validación al perder el foco
+            montoDisplay.on('blur', function() {
+                const valor = $(this).val();
+                const valorNumerico = valor.replace(/[^\d]/g, '');
+                
+                if (valorNumerico && !validarMonto(valor)) {
+                    $(this).addClass('is-invalid');
+                    montoError.show();
+                    btnEnviar.prop('disabled', true);
+                }
+            });
+            
+            // Validación antes de enviar el formulario
+            $('#formOferta').on('submit', function(e) {
+                const montoValor = montoDisplay.val();
+                const montoNumerico = montoValor.replace(/[^\d]/g, '');
+                
+                // Validar que hay un monto
+                if (!montoNumerico) {
+                    e.preventDefault();
+                    montoDisplay.addClass('is-invalid');
+                    montoError.text('El monto de la oferta es requerido').show();
+                    showToast('Debe ingresar un monto para la oferta', 'error');
+                    return false;
+                }
+                
+                // Validar rango
+                if (!validarMonto(montoValor)) {
+                    e.preventDefault();
+                    montoDisplay.addClass('is-invalid');
+                    montoError.text('El monto debe estar entre RD$1,000 y RD$100,000,000').show();
+                    showToast('Monto de oferta fuera del rango permitido', 'error');
+                    return false;
+                }
+                
+                // Asegurar que el campo oculto tiene el valor correcto
+                montoHidden.val(montoNumerico);
+                
+                // Deshabilitar botón para evitar doble envío
+                btnEnviar.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span>Enviando...');
+                
+                return true;
+            });
+            
+            // Limpiar formulario cuando se abre el modal
+            $('#ofertaModal').on('show.bs.modal', function() {
+                montoDisplay.val('').removeClass('is-valid is-invalid');
+                montoHidden.val('');
+                $('#comentarios').val('');
+                montoError.hide();
+                btnEnviar.prop('disabled', true).html('<i class="bi bi-send"></i> Enviar Oferta');
+            });
+            
+            // Handler para favoritos con AJAX
+            $('.favorito-btn').on('click', function() {
+                const button = $(this);
+                const propiedadId = button.data('propiedad-id');
+                const esFavorito = button.data('es-favorito');
+                
+                // Deshabilitar botón durante la petición
+                button.prop('disabled', true);
+                
+                $.ajax({
+                    url: '@Url.Action("ToggleFavorito", "Home")',
+                    type: 'POST',
+                    data: {
+                        propiedadId: propiedadId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Actualizar estado del botón
+                            const nuevoEsFavorito = response.isFavorite;
+                            button.data('es-favorito', nuevoEsFavorito);
+                            
+                            // Actualizar clases CSS y contenido
+                            if (nuevoEsFavorito) {
+                                button.removeClass('btn-outline-danger').addClass('btn-danger');
+                                button.find('i').removeClass('bi-heart').addClass('bi-heart-fill');
+                                button.find('#textFavorito').text('Quitar de Favoritos');
+                            } else {
+                                button.removeClass('btn-danger').addClass('btn-outline-danger');
+                                button.find('i').removeClass('bi-heart-fill').addClass('bi-heart');
+                                button.find('#textFavorito').text('Agregar a Favoritos');
+                            }
+                            
+                            // Mostrar mensaje de éxito
+                            showToast(response.message, 'success');
+                        } else {
+                            showToast(response.message, 'error');
+                        }
+                    },
+                    error: function() {
+                        showToast('Error al actualizar favoritos. Intente nuevamente.', 'error');
+                    },
+                    complete: function() {
+                        // Rehabilitar botón
+                        button.prop('disabled', false);
+                    }
+                });
+            });
+        });
+        
+        // Función para mostrar mensajes tipo toast
+        function showToast(message, type) {
+            const toastClass = type === 'success' ? 'bg-success' : 'bg-danger';
+            const toastHtml = `
+                <div class="toast align-items-center text-white ${toastClass} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">${message}</div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            // Crear contenedor de toasts si no existe
+            if ($('#toast-container').length === 0) {
+                $('body').append('<div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1080;"></div>');
+            }
+            
+            const $toast = $(toastHtml);
+            $('#toast-container').append($toast);
+            
+            // Mostrar toast
+            const bsToast = new bootstrap.Toast($toast[0]);
+            bsToast.show();
+            
+            // Eliminar del DOM después de ocultarse
+            $toast[0].addEventListener('hidden.bs.toast', function () {
+                $toast.remove();
+            });
+        }
+    </script>
+
+    @Html.AntiForgeryToken()
+}

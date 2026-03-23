@@ -1,0 +1,136 @@
+@model ListadoAgentesViewModel
+@{
+    ViewData["Title"] = "Agentes";
+}
+
+<div class="container">
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-4">
+                <i class="bi bi-people-fill"></i> Nuestros Agentes
+            </h1>
+            <p class="lead">Encuentra al agente perfecto para ti</p>
+        </div>
+    </div>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Index" method="get">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-text">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" 
+                                   name="nombre" 
+                                   value="@Model.NombreBusqueda" 
+                                   class="form-control" 
+                                   placeholder="Buscar por nombre de agente..." />
+                            <button class="btn btn-primary" type="submit">
+                                Buscar
+                            </button>
+                            @if (!string.IsNullOrWhiteSpace(Model.NombreBusqueda))
+                            {
+                                <a asp-action="Index" class="btn btn-secondary">
+                                    <i class="bi bi-x-circle"></i> Limpiar
+                                </a>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row">
+        @if (Model.Agentes != null && Model.Agentes.Any())
+        {
+            @foreach (var agente in Model.Agentes)
+            {
+                <div class="col-md-4 col-lg-3 mb-4">
+                    <div class="card h-100 shadow-sm text-center hover-shadow">
+                        
+                        <div class="card-body">
+                            <div class="mb-3">
+                                @if (!string.IsNullOrEmpty(agente.UrlImagenPerfil))
+                                {
+                                    <img src="~/@agente.UrlImagenPerfil" 
+                                         alt="@agente.NombreCompleto" 
+                                         class="rounded-circle img-fluid" 
+                                         style="width: 120px; height: 120px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto" 
+                                         style="width: 120px; height: 120px;">
+                                        <i class="bi bi-person-fill text-white" style="font-size: 3rem;"></i>
+                                    </div>
+                                }
+                            </div>
+
+                            
+                            <h5 class="card-title fw-bold">@agente.NombreCompleto</h5>
+
+                            
+                            <p class="text-muted mb-2">
+                                <i class="bi bi-envelope"></i> 
+                                <small>@agente.Email</small>
+                            </p>
+                            
+                            @if (!string.IsNullOrEmpty(agente.Telefono))
+                            {
+                                <p class="text-muted mb-2">
+                                    <i class="bi bi-telephone"></i> 
+                                    <small>@agente.Telefono</small>
+                                </p>
+                            }
+
+                            
+                            <div class="badge bg-primary mb-3">
+                                <i class="bi bi-house-door"></i> 
+                                @agente.CantidadPropiedades propiedad(es)
+                            </div>
+
+                            
+                            <a asp-action="Propiedades" asp-route-id="@agente.Id" class="btn btn-outline-primary w-100">
+                                <i class="bi bi-eye"></i> Ver Propiedades
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle"></i> 
+                    @if (!string.IsNullOrWhiteSpace(Model.NombreBusqueda))
+                    {
+                        <span>No se encontraron agentes con el nombre "@Model.NombreBusqueda".</span>
+                    }
+                    else
+                    {
+                        <span>No hay agentes disponibles en este momento.</span>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .hover-shadow {
+            transition: all 0.3s ease;
+        }
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+        }
+    </style>
+}

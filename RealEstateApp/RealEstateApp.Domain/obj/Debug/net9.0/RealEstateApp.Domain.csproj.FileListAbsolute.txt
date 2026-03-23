@@ -1,0 +1,11 @@
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\bin\Debug\net9.0\RealEstateApp.Domain.deps.json
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\bin\Debug\net9.0\RealEstateApp.Domain.dll
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\bin\Debug\net9.0\RealEstateApp.Domain.pdb
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\obj\Debug\net9.0\RealEstateApp.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\obj\Debug\net9.0\RealEstateApp.Domain.AssemblyInfoInputs.cache
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\obj\Debug\net9.0\RealEstateApp.Domain.AssemblyInfo.cs
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\obj\Debug\net9.0\RealEstateApp.Domain.csproj.CoreCompileInputs.cache
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\obj\Debug\net9.0\RealEstateApp.Domain.dll
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\obj\Debug\net9.0\refint\RealEstateApp.Domain.dll
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\obj\Debug\net9.0\RealEstateApp.Domain.pdb
+C:\Users\A_M_B\Downloads\-RealEstateApp-Dev2\RealEstateApp.Domain\obj\Debug\net9.0\ref\RealEstateApp.Domain.dll

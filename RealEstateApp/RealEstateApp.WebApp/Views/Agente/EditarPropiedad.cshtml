@@ -1,0 +1,685 @@
+@model SavePropiedadViewModel
+@{
+    ViewData["Title"] = "Editar Propiedad";
+    var tiposPropiedades = ViewBag.TiposPropiedades as List<RealEstateApp.Application.ViewModels.Catalogos.TipoPropiedadViewModel>;
+    var tiposVentas = ViewBag.TiposVentas as List<RealEstateApp.Application.ViewModels.Catalogos.TipoVentaViewModel>;
+    var mejoras = ViewBag.Mejoras as List<RealEstateApp.Application.ViewModels.Catalogos.MejoraViewModel>;
+}
+
+<div class="container">
+ 
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index">
+                    <i class="bi bi-house-door"></i> Home del Agente
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a asp-action="MantenimientoPropiedades">Mantenimiento</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Editar Propiedad</li>
+        </ol>
+    </nav>
+
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="display-5">
+                <i class="bi bi-pencil-square text-warning"></i> 
+                Editar Propiedad
+            </h1>
+            <p class="lead text-muted">
+                Modifica la información de tu propiedad. 
+                <span class="text-info">Las imágenes son opcionales en la edición.</span>
+            </p>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-xl-10">
+            <form asp-action="EditarPropiedad" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <input type="hidden" asp-for="Id" />
+                
+                <div class="card shadow">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="bi bi-house-gear"></i> 
+                            Actualizar Información de la Propiedad
+                        </h5>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="row">
+                         
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">
+                                    <i class="bi bi-info-circle"></i> Información Básica
+                                </h6>
+
+                            
+                                <div class="mb-3">
+                                    <label asp-for="TipoPropiedadId" class="form-label required"></label>
+                                    <select asp-for="TipoPropiedadId" class="form-select" id="TipoPropiedadId" required>
+                                        <option value="">Seleccione el tipo de propiedad</option>
+                                        @if (tiposPropiedades != null)
+                                        {
+                                            @foreach (var tipo in tiposPropiedades)
+                                            {
+                                                <option value="@tipo.Id" data-nombre="@tipo.Nombre" selected="@(tipo.Id == Model.TipoPropiedadId)">
+                                                    @tipo.Nombre
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="TipoPropiedadId" class="text-danger"></span>
+                                </div>
+
+                               
+                                <div class="mb-3">
+                                    <label asp-for="TipoVentaId" class="form-label required"></label>
+                                    <select asp-for="TipoVentaId" class="form-select" required>
+                                        <option value="">Seleccione el tipo de venta</option>
+                                        @if (tiposVentas != null)
+                                        {
+                                            @foreach (var tipo in tiposVentas)
+                                            {
+                                                <option value="@tipo.Id" selected="@(tipo.Id == Model.TipoVentaId)">
+                                                    @tipo.Nombre
+                                                </option>
+                                            }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="TipoVentaId" class="text-danger"></span>
+                                </div>
+
+                               
+                                <div class="mb-3">
+                                    <label asp-for="Precio" class="form-label required"></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">DOP $</span>
+                                        <input asp-for="Precio" class="form-control" type="text" 
+                                               inputmode="decimal" 
+                                               pattern="[0-9]*\.?[0-9]*"
+                                               placeholder="2500000" required>
+                                    </div>
+                                    <div class="form-text">
+                                        <i class="bi bi-info-circle"></i> 
+                                        Precio en Pesos Dominicanos (DOP). Use punto (.) como separador decimal si es necesario.
+                                    </div>
+                                    <span asp-validation-for="Precio" class="text-danger"></span>
+                                </div>
+
+                               
+                                <div class="mb-3">
+                                    <label asp-for="Descripcion" class="form-label required"></label>
+                                    <textarea asp-for="Descripcion" class="form-control" rows="4" 
+                                              required maxlength="1000"></textarea>
+                                    <div class="form-text">
+                                        <span id="descripcion-counter">@Model.Descripcion?.Length</span>/1000 caracteres
+                                    </div>
+                                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                          
+                            <div class="col-md-6">
+                                <h6 class="text-muted mb-3">
+                                    <i class="bi bi-rulers"></i> Especificaciones
+                                </h6>
+
+                                
+                                <div class="mb-3">
+                                    <label asp-for="TamanoEnMetros" class="form-label required"></label>
+                                    <div class="input-group">
+                                        <input asp-for="TamanoEnMetros" class="form-control" type="number" min="1" required>
+                                        <span class="input-group-text">m²</span>
+                                    </div>
+                                    <span asp-validation-for="TamanoEnMetros" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3" id="habitaciones-container">
+                                    <label asp-for="CantidadHabitaciones" class="form-label" id="habitaciones-label">
+                                        Cantidad de Habitaciones <span class="text-danger" id="habitaciones-asterisk">*</span>
+                                    </label>
+                                    <select asp-for="CantidadHabitaciones" class="form-select" id="CantidadHabitaciones">
+                                        <option value="0">No aplica / 0</option>
+                                        @for (int i = 1; i <= 7; i++)
+                                        {
+                                            <option value="@i" selected="@(i == Model.CantidadHabitaciones)">
+                                                @(i == 7 ? "7+ habitaciones" : $"{i} habitación{(i > 1 ? "es" : "")}")
+                                            </option>
+                                        }
+                                    </select>
+                                    <div class="form-text" id="habitaciones-help"></div>
+                                    <span asp-validation-for="CantidadHabitaciones" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3" id="banos-container">
+                                    <label asp-for="CantidadBanos" class="form-label" id="banos-label">
+                                        Cantidad de Baños <span class="text-danger" id="banos-asterisk">*</span>
+                                    </label>
+                                    <select asp-for="CantidadBanos" class="form-select" id="CantidadBanos">
+                                        <option value="0">No aplica / 0</option>
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <option value="@i" selected="@(i == Model.CantidadBanos)">
+                                                @(i == 5 ? "5+ baños" : $"{i} baño{(i > 1 ? "s" : "")}")
+                                            </option>
+                                        }
+                                    </select>
+                                    <div class="form-text" id="banos-help"></div>
+                                    <span asp-validation-for="CantidadBanos" class="text-danger"></span>
+                                </div>
+
+                                <div class="mb-3" id="mejoras-container">
+                                    <label class="form-label" id="mejoras-label">
+                                        Mejoras de la Propiedad <span class="text-danger" id="mejoras-asterisk">*</span>
+                                    </label>
+                                    <div class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                                        @if (mejoras != null && mejoras.Any())
+                                        {
+                                            @foreach (var mejora in mejoras)
+                                            {
+                                                var isSelected = Model.MejorasSeleccionadas?.Contains(mejora.Id) ?? false;
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" 
+                                                           name="MejorasSeleccionadas" value="@mejora.Id" 
+                                                           id="mejora-@mejora.Id"
+                                                           checked="@isSelected">
+                                                    <label class="form-check-label" for="mejora-@mejora.Id">
+                                                        @mejora.Nombre
+                                                    </label>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p class="text-muted">No hay mejoras disponibles</p>
+                                        }
+                                    </div>
+                                    <div class="form-text" id="mejoras-help">
+                                        <i class="bi bi-check-square"></i> 
+                                        Seleccione al menos una mejora
+                                    </div>
+                                    <span class="text-danger" id="mejoras-validation"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (Model.ImagenesActuales != null && Model.ImagenesActuales.Any())
+                        {
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <hr>
+                                    <h6 class="text-muted mb-3">
+                                        <i class="bi bi-images"></i> Imágenes Actuales
+                                        <span class="badge bg-info text-dark">@Model.ImagenesActuales.Count imagen(es)</span>
+                                    </h6>
+
+                                    <div class="row">
+                                        @for (int i = 0; i < Model.ImagenesActuales.Count; i++)
+                                        {
+                                            var imagen = Model.ImagenesActuales[i];
+                                            <div class="col-md-3 col-sm-6 mb-3">
+                                                <div class="card imagen-actual-card" data-imagen="@imagen">
+                                                    <img src="~/@imagen" class="card-img-top" alt="Imagen @(i + 1)" style="height: 150px; object-fit: cover;">
+                                                    <div class="card-body p-2 text-center">
+                                                        <button type="button" class="btn btn-danger btn-sm eliminar-imagen" 
+                                                                data-imagen="@imagen">
+                                                            <i class="bi bi-trash"></i> Eliminar
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+
+                                  
+                                    <div id="imagenes-eliminar-container"></div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <hr>
+                                <h6 class="text-muted mb-3">
+                                    <i class="bi bi-plus-circle"></i> Agregar Nuevas Imágenes 
+                                    <span class="text-muted">(Opcional)</span>
+                                </h6>
+
+                                <div class="mb-3">
+                                    <label asp-for="Imagenes" class="form-label">Seleccionar Nuevas Imágenes</label>
+                                    <input asp-for="Imagenes" class="form-control" type="file" accept="image/*" multiple data-val="false">
+                                    <div class="form-text">
+                                        <i class="bi bi-info-circle"></i> 
+                                        Formatos: JPG, PNG, GIF. Máximo 2MB cada una. 
+                                        <strong>Total máximo: 4 imágenes</strong> (incluyendo las actuales)
+                                    </div>
+                                    <span asp-validation-for="Imagenes" class="text-danger"></span>
+                                </div>
+
+                                <div id="nuevas-imagenes-preview" class="row d-none mt-3">
+                                    <div class="col-12">
+                                        <h6 class="text-muted">Vista Previa de Nuevas Imágenes:</h6>
+                                        <div class="d-flex flex-wrap gap-2" id="preview-container">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <a asp-action="MantenimientoPropiedades" class="btn btn-secondary btn-lg">
+                                        <i class="bi bi-arrow-left"></i> Volver Atrás
+                                    </a>
+                                    <button type="submit" class="btn btn-warning btn-lg text-dark">
+                                        <i class="bi bi-check-circle"></i> Guardar Cambios
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card mt-4">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">
+                            <i class="bi bi-lightbulb"></i> Consejos para la Edición
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success"></i>
+                                        <strong>Campos requeridos</strong> dependen del tipo de propiedad
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-info-circle text-info"></i>
+                                        Puedes <strong>eliminar imágenes actuales</strong> y agregar nuevas
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul class="list-unstyled">
+                                    <li class="mb-2">
+                                        <i class="bi bi-shield-check text-primary"></i>
+                                        Los cambios se guardan <strong>automáticamente</strong> al enviar
+                                    </li>
+                                    <li class="mb-2">
+                                        <i class="bi bi-images text-warning"></i>
+                                        Máximo <strong>4 imágenes totales</strong> (actuales + nuevas)
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .required::after {
+            content: " *";
+            color: #dc3545;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #ffc107;
+            box-shadow: 0 0 0 0.2rem rgba(255, 193, 7, 0.25);
+        }
+        
+        .preview-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+        
+        .preview-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .remove-preview {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            border: none;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .imagen-actual-card {
+            transition: all 0.3s ease;
+        }
+        
+        .imagen-actual-card.imagen-eliminada {
+            opacity: 0.5;
+            transform: scale(0.95);
+            filter: grayscale(100%);
+        }
+        
+        .eliminar-imagen:hover {
+            transform: scale(1.1);
+        }
+        
+        .field-optional {
+            opacity: 0.7;
+        }
+        
+        .field-optional .form-select,
+        .field-optional .border {
+            background-color: #f8f9fa;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            let imagenesAEliminar = [];
+            
+            const tiposSinHabitaciones = ['terreno', 'local comercial', 'local', 'oficina', 'bodega', 'parqueo'];
+            
+            let camposExtrasRequeridos = true;
+            
+            // Función para actualizar los campos según el tipo de propiedad
+            function actualizarCamposSegunTipo() {
+                const tipoSelect = $('#TipoPropiedadId');
+                const selectedOption = tipoSelect.find('option:selected');
+                const tipoNombre = selectedOption.data('nombre') || selectedOption.text();
+                const tipoNombreLower = tipoNombre.toLowerCase().trim();
+                
+                // Verificar si el tipo seleccionado no requiere campos extras
+                const esTipoSimplificado = tiposSinHabitaciones.some(t => tipoNombreLower.includes(t));
+                
+                const habitacionesSelect = $('#CantidadHabitaciones');
+                const banosSelect = $('#CantidadBanos');
+                const habitacionesContainer = $('#habitaciones-container');
+                const banosContainer = $('#banos-container');
+                const habitacionesAsterisk = $('#habitaciones-asterisk');
+                const banosAsterisk = $('#banos-asterisk');
+                const habitacionesHelp = $('#habitaciones-help');
+                const banosHelp = $('#banos-help');
+                
+                // Mejoras
+                const mejorasContainer = $('#mejoras-container');
+                const mejorasAsterisk = $('#mejoras-asterisk');
+                const mejorasHelp = $('#mejoras-help');
+                
+                if (esTipoSimplificado) {
+                    camposExtrasRequeridos = false;
+                    
+                    // Quitar required y marcar como opcional
+                    habitacionesSelect.removeAttr('required');
+                    banosSelect.removeAttr('required');
+                    
+                    habitacionesContainer.addClass('field-optional');
+                    banosContainer.addClass('field-optional');
+                    habitacionesAsterisk.hide();
+                    banosAsterisk.hide();
+                    
+                    habitacionesHelp.html('<i class="bi bi-info-circle"></i> Opcional para ' + tipoNombre);
+                    banosHelp.html('<i class="bi bi-info-circle"></i> Opcional para ' + tipoNombre);
+                    
+                    // Quitar clases de error
+                    habitacionesSelect.removeClass('is-invalid');
+                    banosSelect.removeClass('is-invalid');
+                    
+                    // ? Actualizar UI - Mejoras
+                    mejorasContainer.addClass('field-optional');
+                    mejorasAsterisk.hide();
+                    mejorasHelp.html('<i class="bi bi-info-circle"></i> Opcional para ' + tipoNombre);
+                    $('#mejoras-validation').text('');
+                    
+                } else {
+                    camposExtrasRequeridos = true;
+                    
+                    habitacionesSelect.attr('required', 'required');
+                    banosSelect.attr('required', 'required');
+                    
+                    habitacionesContainer.removeClass('field-optional');
+                    banosContainer.removeClass('field-optional');
+                    habitacionesAsterisk.show();
+                    banosAsterisk.show();
+                    
+                    habitacionesHelp.empty();
+                    banosHelp.empty();
+                    
+                    mejorasContainer.removeClass('field-optional');
+                    mejorasAsterisk.show();
+                    mejorasHelp.html('<i class="bi bi-check-square"></i> Seleccione al menos una mejora');
+                }
+            }
+            
+            $('#TipoPropiedadId').on('change', function() {
+                actualizarCamposSegunTipo();
+            });
+            
+            // Ejecutar al cargar la página (por si hay un valor preseleccionado)
+            actualizarCamposSegunTipo();
+
+            // Normalizar el campo de precio para aceptar tanto coma como punto
+            $('#Precio').on('input', function() {
+                let value = $(this).val().replace(',', '.');
+                value = value.replace(/[^0-9.]/g, '');
+                const parts = value.split('.');
+                if (parts.length > 2) {
+                    value = parts[0] + '.' + parts.slice(1).join('');
+                }
+                $(this).val(value);
+                
+                if (value) {
+                    const formatted = parseFloat(value).toLocaleString('es-DO');
+                    $(this).attr('title', `DOP $${formatted}`);
+                }
+            });
+
+            // Contador de descripción
+            $('#Descripcion').on('input', function() {
+                const length = $(this).val().length;
+                $('#descripcion-counter').text(length);
+                
+                if (length > 1000) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+
+            // Eliminar imagen actual
+            $('.eliminar-imagen').on('click', function() {
+                const imagen = $(this).data('imagen');
+                const card = $(this).closest('.imagen-actual-card');
+                
+                if (confirm('¿Está seguro que desea eliminar esta imagen?')) {
+                    imagenesAEliminar.push(imagen);
+                    
+                    $('#imagenes-eliminar-container').append(`
+                        <input type="hidden" name="ImagenesAEliminar" value="${imagen}">
+                    `);
+                    
+                    card.addClass('imagen-eliminada');
+                    $(this).prop('disabled', true).text('Eliminada');
+                    
+                    validarCantidadImagenes();
+                }
+            });
+
+            $('#Imagenes').on('change', function() {
+                const files = Array.from(this.files);
+                const previewContainer = $('#preview-container');
+                const previewSection = $('#nuevas-imagenes-preview');
+                
+                previewContainer.empty();
+                
+                if (files.length > 0) {
+                    if (!validarCantidadImagenes(files.length)) {
+                        alert('Excede el máximo de 4 imágenes totales. Elimine algunas imágenes actuales primero.');
+                        $(this).val('');
+                        previewSection.addClass('d-none');
+                        return;
+                    }
+                    
+                    let validFiles = true;
+                    files.forEach((file, index) => {
+                        if (file.size > 2 * 1024 * 1024) {
+                            alert(`La imagen "${file.name}" es muy grande. Máximo 2MB permitido.`);
+                            validFiles = false;
+                            return;
+                        }
+                        
+                        if (!file.type.startsWith('image/')) {
+                            alert(`"${file.name}" no es un archivo de imagen válido.`);
+                            validFiles = false;
+                            return;
+                        }
+                        
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const previewDiv = $(`
+                                <div class="preview-container">
+                                    <img src="${e.target.result}" class="preview-image" alt="Nueva ${index + 1}">
+                                    <button type="button" class="remove-preview" data-index="${index}">×</button>
+                                </div>
+                            `);
+                            previewContainer.append(previewDiv);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                    
+                    if (!validFiles) {
+                        $(this).val('');
+                        previewSection.addClass('d-none');
+                        return;
+                    }
+                    
+                    previewSection.removeClass('d-none');
+                } else {
+                    previewSection.addClass('d-none');
+                }
+            });
+
+            // Remover nueva imagen del preview
+            $(document).on('click', '.remove-preview', function() {
+                const index = $(this).data('index');
+                const input = document.getElementById('Imagenes');
+                const dt = new DataTransfer();
+                const files = Array.from(input.files);
+                
+                files.forEach((file, i) => {
+                    if (i !== index) {
+                        dt.items.add(file);
+                    }
+                });
+                
+                input.files = dt.files;
+                $(input).trigger('change');
+            });
+
+            // Validar cantidad total de imágenes
+            function validarCantidadImagenes(nuevasImagenes = 0) {
+                const imagenesActuales = $('.imagen-actual-card:not(.imagen-eliminada)').length;
+                const totalImagenes = imagenesActuales + nuevasImagenes;
+                
+                return totalImagenes <= 4;
+            }
+
+            // Validación de formulario
+            $('form').on('submit', function(e) {
+                let valid = true;
+                
+                // Validar tipo de propiedad
+                if (!$('#TipoPropiedadId').val()) {
+                    $('#TipoPropiedadId').addClass('is-invalid');
+                    valid = false;
+                }
+                
+                // Validar tipo de venta
+                if (!$('#TipoVentaId').val()) {
+                    $('#TipoVentaId').addClass('is-invalid');
+                    valid = false;
+                }
+
+                // Validar precio específicamente
+                const precioVal = $('#Precio').val();
+                if (!precioVal || parseFloat(precioVal) <= 0) {
+                    $('#Precio').addClass('is-invalid');
+                    valid = false;
+                }
+                
+                // Validar descripción
+                if (!$('#Descripcion').val() || $('#Descripcion').val().length < 10) {
+                    $('#Descripcion').addClass('is-invalid');
+                    valid = false;
+                }
+                
+                
+                if (!$('#TamanoEnMetros').val() || parseInt($('#TamanoEnMetros').val()) <= 0) {
+                    $('#TamanoEnMetros').addClass('is-invalid');
+                    valid = false;
+                }
+                
+                if (camposExtrasRequeridos) {
+                    const habitaciones = $('#CantidadHabitaciones').val();
+                    const banos = $('#CantidadBanos').val();
+                    
+                    if (!habitaciones || habitaciones === '' || parseInt(habitaciones) <= 0) {
+                        $('#CantidadHabitaciones').addClass('is-invalid');
+                        valid = false;
+                    }
+                    
+                    if (!banos || banos === '' || parseInt(banos) <= 0) {
+                        $('#CantidadBanos').addClass('is-invalid');
+                        valid = false;
+                    }
+                    
+                    // Validar mejoras solo si es requerido
+                    const mejorasSeleccionadas = $('input[name="MejorasSeleccionadas"]:checked').length;
+                    if (mejorasSeleccionadas === 0) {
+                        $('#mejoras-validation').text('Debe seleccionar al menos una mejora');
+                        valid = false;
+                    } else {
+                        $('#mejoras-validation').text('');
+                    }
+                }
+                
+                
+                
+                if (!valid) {
+                    e.preventDefault();
+                    alert('Por favor complete todos los campos requeridos.');
+                    $('input.is-invalid, select.is-invalid, textarea.is-invalid').first().focus();
+                }
+            });
+
+            // Limpiar validaciones al cambiar valores
+            $('input, select, textarea').on('change input', function() {
+                $(this).removeClass('is-invalid');
+            });
+
+            $('input[name="MejorasSeleccionadas"]').on('change', function() {
+                const checked = $('input[name="MejorasSeleccionadas"]:checked').length;
+                if (checked > 0) {
+                    $('#mejoras-validation').text('');
+                }
+            });
+        });
+    </script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

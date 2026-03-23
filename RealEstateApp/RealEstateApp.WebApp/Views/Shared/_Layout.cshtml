@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Real Estate App</title>
+    
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/RealEstateApp.WebApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+            <div class="container">
+                
+                <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-house-door-fill"></i> Real Estate App
+                </a>
+                
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        
+                        @if (!User.Identity?.IsAuthenticated ?? true)
+                        {
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                    <i class="bi bi-house"></i> Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Agentes" asp-action="Index">
+                                    <i class="bi bi-people"></i> Agentes
+                                </a>
+                            </li>
+                        }
+                        else if (User.IsInRole("Cliente"))
+                        {
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Index">
+                                    <i class="bi bi-house"></i> Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Agentes" asp-action="Index">
+                                    <i class="bi bi-people"></i> Agentes
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="MisFavoritos">
+                                    <i class="bi bi-heart-fill text-danger"></i> Mis Favoritos
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-house-check"></i> Mis Propiedades
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Cliente" asp-action="PropiedadesAdquiridas">
+                                            <i class="bi bi-house-door-fill"></i> Propiedades Adquiridas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Cliente" asp-action="MisOfertas">
+                                            <i class="bi bi-cash-stack"></i> Mis Ofertas
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else if (User.IsInRole("Agente"))
+                        {
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Agente" asp-action="Index">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Agente" asp-action="MisPropiedades">
+                                    <i class="bi bi-building"></i> Mis Propiedades
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Agente" asp-action="Ofertas">
+                                    <i class="bi bi-cash-stack"></i> Ofertas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link notification-badge" asp-controller="Agente" asp-action="Conversaciones" 
+                                   data-count="0" id="mensajesCount">
+                                    <i class="bi bi-chat-dots"></i> Mensajes
+                                </a>
+                            </li>
+                            
+                            
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle notification-badge" href="#" role="button" 
+                                   data-bs-toggle="dropdown" aria-expanded="false" data-count="0" id="notificacionesCount">
+                                    <i class="bi bi-bell-fill"></i> Notificaciones
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end notifications-dropdown" id="notificacionesDropdown">
+                                    <li class="dropdown-header">
+                                        <strong>Notificaciones</strong>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li class="p-3 text-center text-muted" id="noNotificaciones">
+                                        <i class="bi bi-bell-slash"></i>
+                                        <p class="mb-0 mt-2">No tienes notificaciones</p>
+                                    </li>
+                                    <div id="listaNotificaciones"></div>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item text-center text-primary" href="#" id="verTodasNotificaciones">
+                                            <i class="bi bi-eye"></i> Ver todas
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else if (User.IsInRole("Administrador"))
+                        {
+                            
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Index">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Admin" asp-action="Agentes">
+                                    <i class="bi bi-people"></i> Gestión de Agentes
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-gear"></i> Usuarios
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Administradores">
+                                            <i class="bi bi-shield-check"></i> Administradores
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Desarrolladores">
+                                            <i class="bi bi-code-slash"></i> Desarrolladores
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-gear"></i> Catálogos
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="TipoPropiedades" asp-action="Index">
+                                            <i class="bi bi-house-fill"></i> Tipos de Propiedad
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="TipoVentas" asp-action="Index">
+                                            <i class="bi bi-tag-fill"></i> Tipos de Venta
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" asp-controller="Mejoras" asp-action="Index">
+                                            <i class="bi bi-stars"></i> Mejoras
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                    
+                   
+                    <ul class="navbar-nav ms-auto navbar-auth-buttons">
+                        @if (!User.Identity?.IsAuthenticated ?? true)
+                        {
+                            
+                            <li class="nav-item">
+                                <a class="nav-link btn-register" asp-controller="Account" asp-action="Register">
+                                    <i class="bi bi-person-plus"></i> Únete a la App
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link btn-login" asp-controller="Account" asp-action="Login">
+                                    <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-person-circle"></i> @User.Identity?.Name
+                                    @if (User.IsInRole("Cliente"))
+                                    {
+                                        <span class="badge bg-light text-dark ms-1">Cliente</span>
+                                    }
+                                    else if (User.IsInRole("Agente"))
+                                    {
+                                        <span class="badge bg-light text-dark ms-1">Agente</span>
+                                    }
+                                    else if (User.IsInRole("Administrador"))
+                                    {
+                                        <span class="badge bg-light text-dark ms-1">Admin</span>
+                                    }
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    @if (User.IsInRole("Agente"))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Agente" asp-action="MiPerfil">
+                                                <i class="bi bi-person"></i> Mi Perfil
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
+                                    else if (User.IsInRole("Cliente"))
+                                    {
+                                        <li>
+                                            <a class="dropdown-item" asp-controller="Home" asp-action="MisFavoritos">
+                                                <i class="bi bi-heart-fill text-danger"></i> Mis Favoritos
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                    }
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    
+    @if (TempData["Success"] != null)
+    {
+        <div class="container mt-3">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill"></i> @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="container mt-3">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+
+    @if (TempData["Warning"] != null)
+    {
+        <div class="container mt-3">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-circle-fill"></i> @TempData["Warning"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+
+    @if (TempData["Info"] != null)
+    {
+        <div class="container mt-3">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="bi bi-info-circle-fill"></i> @TempData["Info"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+
+    
+    <main class="container my-4">
+        @RenderBody()
+    </main>
+
+    
+    <footer class="bg-dark text-white mt-5 py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="bi bi-house-door-fill"></i> Real Estate App</h5>
+                    <p class="text-muted">Tu plataforma de confianza para encontrar la propiedad ideal en República Dominicana.</p>
+                    <small class="text-muted">Todos los precios están expresados en Pesos Dominicanos (DOP)</small>
+                </div>
+                <div class="col-md-6">
+                    <h6>Contacto</h6>
+                    <ul class="list-unstyled text-white-50">
+                        <li><i class="bi bi-envelope"></i> info@realestate.do</li>
+                        <li><i class="bi bi-telephone"></i> +1 809-123-4567</li>
+                        <li><i class="bi bi-geo-alt"></i> República Dominicana</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="bg-secondary" />
+            <div class="text-center text-muted">
+                &copy; @DateTime.Now.Year - Real Estate App RD. Todos los derechos reservados.
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @if (User.IsInRole("Agente"))
+    {
+        <script src="~/js/notificaciones.js" asp-append-version="true"></script>
+    }
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

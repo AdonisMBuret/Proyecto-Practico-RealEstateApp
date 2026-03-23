@@ -1,0 +1,179 @@
+@model List<RealEstateApp.Application.ViewModels.Catalogos.TipoPropiedadViewModel>
+@{
+    ViewData["Title"] = "Tipos de Propiedades";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h2><i class="bi bi-house-fill text-primary"></i> Tipos de Propiedades</h2>
+                    <p class="text-muted">Gestión de catálogo de tipos de propiedades</p>
+                </div>
+                <div>
+                    <a asp-action="Create" class="btn btn-success">
+                        <i class="bi bi-plus-circle"></i> Nuevo Tipo
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>@Model.Count</h4>
+                            <p class="mb-0">Total de Tipos</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-house-fill fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>@Model.Sum(t => t.CantidadPropiedades)</h4>
+                            <p class="mb-0">Propiedades Totales</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-building fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>@Model.Count(t => t.CantidadPropiedades > 0)</h4>
+                            <p class="mb-0">Tipos en Uso</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-check-circle fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>@Model.Count(t => t.CantidadPropiedades == 0)</h4>
+                            <p class="mb-0">Sin Propiedades</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-exclamation-triangle fs-2"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0"><i class="bi bi-list-ul"></i> Listado de Tipos</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model != null && Model.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th class="text-center">Propiedades</th>
+                                        <th class="text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var tipo in Model.OrderBy(t => t.Nombre))
+                                    {
+                                        <tr>
+                                            <td>
+                                                <strong>@tipo.Nombre</strong>
+                                                @if (tipo.CantidadPropiedades > 0)
+                                                {
+                                                    <span class="badge bg-success ms-2">En uso</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary ms-2">Sin usar</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="text-muted">@tipo.Descripcion</span>
+                                            </td>
+                                            <td class="text-center">
+                                                @if (tipo.CantidadPropiedades > 0)
+                                                {
+                                                    <span class="badge bg-primary fs-6">@tipo.CantidadPropiedades</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="text-muted">0</span>
+                                                }
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="btn-group" role="group">
+                                                    <a asp-action="Edit" asp-route-id="@tipo.Id" 
+                                                       class="btn btn-sm btn-outline-primary" 
+                                                       title="Editar">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </a>
+                                                    @if (tipo.CantidadPropiedades == 0)
+                                                    {
+                                                        <a asp-action="Delete" asp-route-id="@tipo.Id" 
+                                                           class="btn btn-sm btn-outline-danger" 
+                                                           title="Eliminar">
+                                                            <i class="bi bi-trash"></i>
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <button class="btn btn-sm btn-outline-secondary" 
+                                                                disabled 
+                                                                title="No se puede eliminar porque tiene propiedades asociadas">
+                                                            <i class="bi bi-lock"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-house text-muted" style="font-size: 4rem;"></i>
+                            <h4 class="text-muted mt-3">No hay tipos de propiedades registrados</h4>
+                            <p class="text-muted">Crea el primer tipo de propiedad para comenzar</p>
+                            <a asp-action="Create" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> Crear Primer Tipo
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

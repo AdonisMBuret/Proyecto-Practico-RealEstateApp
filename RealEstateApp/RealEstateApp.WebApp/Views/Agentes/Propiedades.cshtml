@@ -1,0 +1,170 @@
+@model RealEstateApp.Application.ViewModels.Agentes.AgentePropiedadesViewModel
+@{
+    ViewData["Title"] = $"Propiedades de {Model.Agente.NombreCompleto}";
+}
+
+<div class="container">
+    
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-action="Index">Agentes</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Agente.NombreCompleto</li>
+        </ol>
+    </nav>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center">
+                            @if (!string.IsNullOrEmpty(Model.Agente.UrlImagenPerfil))
+                            {
+                                <img src="~/@Model.Agente.UrlImagenPerfil" 
+                                     alt="@Model.Agente.NombreCompleto" 
+                                     class="rounded-circle img-fluid" 
+                                     style="width: 100px; height: 100px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center mx-auto" 
+                                     style="width: 100px; height: 100px;">
+                                    <i class="bi bi-person-fill text-white" style="font-size: 2.5rem;"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-8">
+                            <h2 class="mb-2">@Model.Agente.NombreCompleto</h2>
+                            <p class="text-muted mb-2">
+                                <i class="bi bi-envelope"></i> @Model.Agente.Email
+                            </p>
+                            @if (!string.IsNullOrEmpty(Model.Agente.Telefono))
+                            {
+                                <p class="text-muted mb-0">
+                                    <i class="bi bi-telephone"></i> 
+                                    <a href="tel:@Model.Agente.Telefono" class="text-decoration-none">
+                                        @Model.Agente.Telefono
+                                    </a>
+                                </p>
+                            }
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <div class="badge bg-primary fs-6">
+                                <i class="bi bi-house-door"></i> 
+                                @Model.TotalPropiedades propiedad(es)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="row mb-4">
+        <div class="col-12">
+            <h3>
+                <i class="bi bi-house-door-fill"></i> 
+                Propiedades Disponibles 
+                <small class="text-muted">(@Model.TotalPropiedades)</small>
+            </h3>
+        </div>
+    </div>
+
+    
+    <div class="row">
+        @if (Model.TienePropiedades)
+        {
+            @foreach (var propiedad in Model.Propiedades)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm hover-shadow">
+                        
+                        <div class="position-relative">
+                            @if (!string.IsNullOrEmpty(propiedad.ImagenPrincipal))
+                            {
+                                <img src="~/@propiedad.ImagenPrincipal" 
+                                     class="card-img-top" 
+                                     alt="@propiedad.TipoPropiedad" 
+                                     style="height: 250px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <img src="~/images/no-image.png" 
+                                     class="card-img-top" 
+                                     alt="Sin imagen" 
+                                     style="height: 250px; object-fit: cover;">
+                            }
+                            
+                            <span class="badge bg-primary position-absolute top-0 end-0 m-2">@propiedad.TipoVenta</span>
+                        </div>
+
+                        <div class="card-body">
+                            
+                            <h6 class="text-muted mb-2">@propiedad.TipoPropiedad</h6>
+                            
+                            
+                            <h5 class="card-title">Código: @propiedad.Codigo</h5>
+                            
+                            
+                            <h4 class="text-primary fw-bold">@propiedad.PrecioFormateado</h4>
+                            
+                            
+                            <div class="d-flex justify-content-between mt-3 mb-3">
+                                <span title="Habitaciones">
+                                    <i class="bi bi-door-open"></i> @propiedad.CantidadHabitaciones
+                                </span>
+                                <span title="Baños">
+                                    <i class="bi bi-droplet"></i> @propiedad.CantidadBanos
+                                </span>
+                                <span title="Tamaño">
+                                    <i class="bi bi-rulers"></i> @propiedad.TamanoEnMetros m²
+                                </span>
+                            </div>
+
+                            
+                            <div class="d-grid">
+                                <a asp-controller="Home" asp-action="Details" asp-route-id="@propiedad.Id" class="btn btn-outline-primary">
+                                    <i class="bi bi-eye"></i> Ver Detalles
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    <i class="bi bi-info-circle"></i> 
+                    Este agente no tiene propiedades disponibles en este momento.
+                </div>
+            </div>
+        }
+    </div>
+
+    
+    <div class="row mt-4">
+        <div class="col-12">
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver al Listado de Agentes
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .hover-shadow {
+            transition: all 0.3s ease;
+        }
+        .hover-shadow:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15) !important;
+        }
+    </style>
+}

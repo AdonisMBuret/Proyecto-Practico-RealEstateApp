@@ -1,0 +1,186 @@
+@model RealEstateApp.Application.ViewModels.Admin.SaveDesarrolladorViewModel
+@{
+    ViewData["Title"] = "Crear Nuevo Desarrollador";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="mb-4">
+                <h1 class="display-6">
+                    <i class="bi bi-code-square text-success"></i> Crear Nuevo Desarrollador
+                </h1>
+                <p class="text-muted">Complete todos los campos para registrar un nuevo desarrollador</p>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-person-plus"></i> Información del Desarrollador</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="CrearDesarrollador" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <h6 class="text-success mb-3"><i class="bi bi-person-vcard"></i> Información Personal</h6>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label asp-for="Nombre" class="form-label required">
+                                    <i class="bi bi-person"></i> Nombre
+                                </label>
+                                <input asp-for="Nombre" class="form-control" placeholder="Nombre completo" maxlength="50" />
+                                <span asp-validation-for="Nombre" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Apellido" class="form-label required">
+                                    <i class="bi bi-person"></i> Apellido
+                                </label>
+                                <input asp-for="Apellido" class="form-control" placeholder="Apellidos completos" maxlength="50" />
+                                <span asp-validation-for="Apellido" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="Cedula" class="form-label required">
+                                    <i class="bi bi-credit-card-2-front"></i> Cédula
+                                </label>
+                                <input asp-for="Cedula" class="form-control" placeholder="00000000000" maxlength="11" pattern="[0-9]{11}" />
+                                <span asp-validation-for="Cedula" class="text-danger"></span>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle"></i> Ingrese 11 dígitos sin guiones
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="Email" class="form-label required">
+                                    <i class="bi bi-envelope"></i> Correo Electrónico
+                                </label>
+                                <input asp-for="Email" class="form-control" type="email" placeholder="dev@realestate.do" />
+                                <span asp-validation-for="Email" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h6 class="text-success mb-3"><i class="bi bi-key"></i> Información de Cuenta</h6>
+
+                        <div class="row mb-3">
+                            <div class="col-md-12">
+                                <label asp-for="UserName" class="form-label required">
+                                    <i class="bi bi-person-badge"></i> Nombre de Usuario
+                                </label>
+                                <input asp-for="UserName" class="form-control" placeholder="dev.usuario" maxlength="20" />
+                                <span asp-validation-for="UserName" class="text-danger"></span>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle"></i> Solo letras, números, puntos, guiones y guiones bajos
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="Password" class="form-label required">
+                                    <i class="bi bi-lock"></i> Contraseña
+                                </label>
+                                <input asp-for="Password" class="form-control" type="password" placeholder="••••••••" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                                <div class="form-text">
+                                    <i class="bi bi-info-circle"></i> Mínimo 6 caracteres
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="ConfirmPassword" class="form-label required">
+                                    <i class="bi bi-lock-fill"></i> Confirmar Contraseña
+                                </label>
+                                <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="••••••••" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a asp-action="Desarrolladores" class="btn btn-secondary btn-lg">
+                                        <i class="bi bi-arrow-left"></i> Volver al Listado
+                                    </a>
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="bi bi-check-circle"></i> Crear Desarrollador
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <div class="alert alert-info" role="alert">
+                    <h6 class="alert-heading"><i class="bi bi-lightbulb"></i> Información importante:</h6>
+                    <ul class="mb-0">
+                        <li><strong>Estado inicial:</strong> El desarrollador se creará en estado activo por defecto</li>
+                        <li><strong>Rol asignado:</strong> Se asignará automáticamente el rol de "Desarrollador"</li>
+                        <li><strong>Acceso técnico:</strong> Tendrá acceso a funcionalidades de desarrollo y API</li>
+                        <li><strong>Responsabilidades:</strong> Mantenimiento técnico y desarrollo de nuevas funcionalidades</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <style>
+        .required::after {
+            content: " *";
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .form-control:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+        
+            $('#Nombre').focus();
+            
+           
+            $('#Cedula').on('input', function() {
+                this.value = this.value.replace(/\D/g, '').substring(0, 11);
+            });
+            
+            
+            $('#ConfirmPassword').on('keyup', function() {
+                const password = $('#Password').val();
+                const confirmPassword = $(this).val();
+                
+                if (password !== confirmPassword && confirmPassword.length > 0) {
+                    $(this).addClass('is-invalid');
+                } else {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            
+     
+            $('#Nombre, #Apellido').on('blur', function() {
+                const nombre = $('#Nombre').val().trim();
+                const apellido = $('#Apellido').val().trim();
+                const userName = $('#UserName').val().trim();
+                
+                if (nombre && apellido && !userName) {
+                    const sugerencia = ('dev.' + nombre.toLowerCase() + '.' + apellido.toLowerCase())
+                        .replace(/[^a-z.]/g, '')
+                        .substring(0, 20);
+                    $('#UserName').val(sugerencia);
+                }
+            });
+        });
+    </script>
+}

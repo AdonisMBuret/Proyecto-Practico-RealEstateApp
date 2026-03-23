@@ -1,0 +1,262 @@
+@model IEnumerable<DesarrolladorViewModel>
+@{
+    ViewData["Title"] = "Mantenimiento de Desarrolladores";
+}
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="display-5">
+                    <i class="bi bi-code-slash text-primary"></i> Mantenimiento de Desarrolladores
+                </h1>
+                <a asp-action="CrearDesarrollador" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Crear Nuevo Desarrollador
+                </a>
+            </div>
+            <p class="text-muted">Gestione los usuarios desarrolladores del sistema</p>
+        </div>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+     
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h4 class="text-primary">@Model.Count()</h4>
+                        <small class="text-muted">Total Desarrolladores</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h4 class="text-success">@Model.Count(d => d.IsActive)</h4>
+                        <small class="text-muted">Activos</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <h4 class="text-secondary">@Model.Count(d => !d.IsActive)</h4>
+                        <small class="text-muted">Inactivos</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+ 
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-list-ul"></i> Lista de Desarrolladores
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th scope="col" style="width: 200px;">Desarrollador</th>
+                                        <th scope="col">Cédula</th>
+                                        <th scope="col">Correo</th>
+                                        <th scope="col">Usuario</th>
+                                        <th scope="col" class="text-center" style="width: 100px;">Estado</th>
+                                        <th scope="col" class="text-center" style="width: 120px;">Registro</th>
+                                        <th scope="col" class="text-center" style="width: 180px;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var dev in Model)
+                                    {
+                                        <tr class="@(dev.IsActive ? "" : "table-secondary")">
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="avatar-circle me-3 @(dev.IsActive ? "bg-danger" : "bg-secondary")">
+                                                        @dev.Nombre.FirstOrDefault()@dev.Apellido.FirstOrDefault()
+                                                    </div>
+                                                    <div>
+                                                        <strong>@dev.NombreCompleto</strong>
+                                                        <br>
+                                                        <small class="text-muted">
+                                                            <i class="bi bi-code-slash"></i> Desarrollador
+                                                        </small>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                <code>@dev.Cedula</code>
+                                            </td>
+                                            <td class="align-middle">
+                                                <i class="bi bi-envelope text-muted"></i> @dev.Email
+                                            </td>
+                                            <td class="align-middle">
+                                                <strong>@@@dev.UserName</strong>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                @if (dev.IsActive)
+                                                {
+                                                    <span class="badge bg-success">
+                                                        <i class="bi bi-check-circle"></i> Activo
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">
+                                                        <i class="bi bi-x-circle"></i> Inactivo
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <small class="text-muted">
+                                                    @dev.FechaCreacion.ToString("dd/MM/yyyy")
+                                                </small>
+                                            </td>
+                                            <td class="text-center align-middle">
+                                                <div class="btn-group" role="group">
+                                                
+                                                    <button type="button" 
+                                                            class="btn btn-sm @(dev.IsActive ? "btn-outline-warning" : "btn-outline-success") toggle-dev-estado-btn" 
+                                                            data-dev-id="@dev.Id" 
+                                                            data-is-active="@dev.IsActive.ToString().ToLower()"
+                                                            title="@(dev.IsActive ? "Desactivar" : "Activar") desarrollador">
+                                                        <i class="bi bi-@(dev.IsActive ? "pause" : "play")-circle"></i>
+                                                    </button>
+                                                    
+                                             
+                                                    <a asp-action="EditarDesarrollador" asp-route-id="@dev.Id" 
+                                                       class="btn btn-sm btn-outline-primary" 
+                                                       title="Editar desarrollador">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-code-slash display-1 text-muted mb-3"></i>
+                        <h3 class="text-muted">No hay desarrolladores registrados</h3>
+                        <p class="text-muted">Comience creando el primer desarrollador del sistema</p>
+                        <a asp-action="CrearDesarrollador" class="btn btn-success btn-lg">
+                            <i class="bi bi-plus-circle"></i> Crear Primer Desarrollador
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <style>
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .table th {
+            border-top: none;
+            font-weight: 600;
+        }
+        
+        .btn-group .btn {
+            margin: 0 1px;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(0, 123, 255, 0.05);
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            
+            $('.toggle-dev-estado-btn').on('click', function() {
+                const button = $(this);
+                const devId = button.data('dev-id');
+                const isActive = button.data('is-active');
+                
+                const accion = isActive ? 'desactivar' : 'activar';
+                const mensaje = `¿Está seguro que desea ${accion} este desarrollador?`;
+                
+                if (!confirm(mensaje)) {
+                    return;
+                }
+                
+              
+                button.prop('disabled', true);
+                
+                $.ajax({
+                    url: '@Url.Action("ToggleDesarrolladorEstado", "Admin")',
+                    type: 'POST',
+                    data: {
+                        desarrolladorId: devId,
+                        __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                           
+                            location.reload();
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error al actualizar el estado del desarrollador. Intente nuevamente.');
+                    },
+                    complete: function() {
+                        button.prop('disabled', false);
+                    }
+                });
+            });
+            
+           
+            $('h4').each(function() {
+                const $this = $(this);
+                const countTo = parseInt($this.text());
+                
+                if (!isNaN(countTo)) {
+                    $({ countNum: 0 }).animate({
+                        countNum: countTo
+                    }, {
+                        duration: 1000,
+                        easing: 'swing',
+                        step: function() {
+                            $this.text(Math.floor(this.countNum));
+                        },
+                        complete: function() {
+                            $this.text(this.countNum);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    @Html.AntiForgeryToken()
+}

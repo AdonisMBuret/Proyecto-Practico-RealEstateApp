@@ -1,0 +1,134 @@
+@model RealEstateApp.Application.ViewModels.Catalogos.SaveTipoVentaViewModel
+@{
+    ViewData["Title"] = "Crear Nuevo Tipo de Venta";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <div class="mb-4">
+                <h1 class="display-6">
+                    <i class="bi bi-tag-fill text-success"></i> Crear Nuevo Tipo de Venta
+                </h1>
+                <p class="text-muted">Complete los datos para registrar un nuevo tipo de venta</p>
+            </div>
+
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="bi bi-plus-circle"></i> Información del Tipo de Venta</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        
+                        <div class="mb-4">
+                            <label asp-for="Nombre" class="form-label required">
+                                <i class="bi bi-tag"></i> Nombre del Tipo de Venta
+                            </label>
+                            <input asp-for="Nombre" class="form-control form-control-lg" 
+                                   placeholder="Ej: Venta, Alquiler, Traspaso, etc." 
+                                   maxlength="100" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle"></i> Ingrese un nombre descriptivo y único para el tipo de venta
+                            </div>
+                        </div>
+
+                        
+                        <div class="mb-4">
+                            <label asp-for="Descripcion" class="form-label required">
+                                <i class="bi bi-card-text"></i> Descripción
+                            </label>
+                            <textarea asp-for="Descripcion" class="form-control" rows="4" 
+                                      placeholder="Descripción detallada del tipo de venta..."
+                                      maxlength="500"></textarea>
+                            <span asp-validation-for="Descripcion" class="text-danger"></span>
+                            <div class="form-text">
+                                <i class="bi bi-info-circle"></i> Proporcione una descripción detallada de este tipo de venta
+                            </div>
+                        </div>
+
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                    <a asp-action="Index" class="btn btn-secondary btn-lg">
+                                        <i class="bi bi-arrow-left"></i> Volver al Listado
+                                    </a>
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="bi bi-check-circle"></i> Crear Tipo de Venta
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            
+            <div class="mt-4">
+                <div class="alert alert-info" role="alert">
+                    <h6 class="alert-heading"><i class="bi bi-lightbulb"></i> Ejemplos de Tipos de Venta:</h6>
+                    <ul class="mb-0">
+                        <li><strong>Venta:</strong> Transferencia completa de propiedad</li>
+                        <li><strong>Alquiler:</strong> Arrendamiento temporal de la propiedad</li>
+                        <li><strong>Alquiler con opción a compra:</strong> Arrendamiento con derecho de compra</li>
+                        <li><strong>Traspaso:</strong> Transferencia de derechos de uso</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <style>
+        .required::after {
+            content: " *";
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .form-control:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+        }
+        
+        .form-control-lg {
+            font-size: 1.1rem;
+            padding: 0.75rem 1rem;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            // Auto-focus en el primer campo
+            $('#Nombre').focus();
+            
+            // Contador de caracteres para descripción
+            $('#Descripcion').on('input', function() {
+                const maxLength = 500;
+                const currentLength = $(this).val().length;
+                const remaining = maxLength - currentLength;
+                
+                let helpText = $(this).next('.text-danger').next('.form-text');
+                if (helpText.length === 0) {
+                    helpText = $(this).siblings('.form-text');
+                }
+                
+                if (remaining <= 50) {
+                    helpText.html(`<i class="bi bi-exclamation-circle text-warning"></i> ${remaining} caracteres restantes`);
+                } else {
+                    helpText.html('<i class="bi bi-info-circle"></i> Proporcione una descripción detallada de este tipo de venta');
+                }
+            });
+        });
+    </script>
+}

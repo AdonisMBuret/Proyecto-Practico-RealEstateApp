@@ -1,0 +1,163 @@
+@model RealEstateApp.Application.ViewModels.Catalogos.MejoraViewModel
+@{
+    ViewData["Title"] = "Eliminar Mejora";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            
+            <div class="mb-4">
+                <h1 class="display-6 text-danger">
+                    <i class="bi bi-exclamation-triangle"></i> Eliminar Mejora
+                </h1>
+                <p class="text-muted">Confirme la eliminación de la mejora seleccionada</p>
+            </div>
+
+            
+            <div class="card shadow-sm border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-trash"></i> ¿Está seguro que desea eliminar esta mejora?
+                    </h5>
+                </div>
+                <div class="card-body">
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <strong>ID:</strong>
+                        </div>
+                        <div class="col-md-9">
+                            #@Model.Id
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <strong>Nombre:</strong>
+                        </div>
+                        <div class="col-md-9">
+                            <span class="text-primary fw-bold">@Model.Nombre</span>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <strong>Descripción:</strong>
+                        </div>
+                        <div class="col-md-9">
+                            @Model.Descripcion
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <strong>Propiedades asociadas:</strong>
+                        </div>
+                        <div class="col-md-9">
+                            @if (Model.CantidadPropiedades > 0)
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    @Model.CantidadPropiedades propiedades
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">
+                                    Sin propiedades asociadas
+                                </span>
+                            }
+                        </div>
+                    </div>
+
+                    
+                    @if (Model.CantidadPropiedades > 0)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-exclamation-triangle"></i> ¡Atención! Esta acción es irreversible
+                            </h6>
+                            <p class="mb-0">
+                                Esta mejora tiene <strong>@Model.CantidadPropiedades propiedades asociadas</strong>. 
+                                Al eliminarla, se removerá de todas las propiedades que la tengan asignada.
+                            </p>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="bi bi-info-circle"></i> Información
+                            </h6>
+                            <p class="mb-0">
+                                Esta mejora no tiene propiedades asociadas, por lo que puede eliminarse de forma segura.
+                            </p>
+                        </div>
+                    }
+
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                        <a asp-action="Index" class="btn btn-secondary btn-lg">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
+                        
+                        <form asp-action="Delete" method="post" class="d-inline">
+                            <input asp-for="Id" type="hidden" />
+                            <button type="submit" class="btn btn-danger btn-lg" 
+                                    onclick="return confirm('¿Está completamente seguro de que desea eliminar esta mejora?')">
+                                <i class="bi bi-trash"></i> Sí, Eliminar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="mt-4">
+                <div class="alert alert-warning" role="alert">
+                    <h6 class="alert-heading"><i class="bi bi-shield-exclamation"></i> Esta acción:</h6>
+                    <ul class="mb-0">
+                        <li><strong>Es irreversible:</strong> No podrá recuperar la mejora una vez eliminada</li>
+                        <li><strong>Afecta propiedades:</strong> Se removerá de todas las propiedades asociadas</li>
+                        <li><strong>Mantiene historial:</strong> Las propiedades mantendrán su histórico de mejoras</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <style>
+        .border-danger {
+            border-color: #dc3545 !important;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
+        }
+    </style>
+
+    <script>
+        $(document).ready(function() {
+            // Enfocar botón de cancelar por seguridad
+            $('.btn-secondary').focus();
+            
+            // Agregar animación al botón de eliminar
+            $('.btn-danger').hover(
+                function() {
+                    $(this).addClass('animate__animated animate__pulse');
+                },
+                function() {
+                    $(this).removeClass('animate__animated animate__pulse');
+                }
+            );
+        });
+    </script>
+}
